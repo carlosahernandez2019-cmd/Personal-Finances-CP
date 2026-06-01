@@ -7,74 +7,40 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f4f1;
-    --surface: #ffffff;
-    --surface2: #f0efec;
-    --surface3: #e8e7e3;
-    --border: #e0ddd8;
-    --text: #1a1917;
-    --text-muted: #7a7670;
-    --text-dim: #b0ada8;
-    --accent: #9a7a42;
-    --accent-soft: rgba(154,122,66,0.10);
-    --green: #2d8a5e;
-    --green-soft: rgba(45,138,94,0.10);
-    --red: #c0403a;
-    --red-soft: rgba(192,64,58,0.10);
-    --blue: #3a7eb5;
-    --blue-soft: rgba(58,126,181,0.10);
-    --purple: #7040b8;
-    --purple-soft: rgba(112,64,184,0.10);
-
-    --nav-h: 64px;
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --bg: #f5f4f1; --surface: #ffffff; --surface2: #f0efec; --surface3: #e8e7e3;
+    --border: #e0ddd8; --text: #1a1917; --text-muted: #7a7670; --text-dim: #b0ada8;
+    --accent: #9a7a42; --accent-soft: rgba(154,122,66,0.10);
+    --green: #2d8a5e; --green-soft: rgba(45,138,94,0.10);
+    --red: #c0403a; --red-soft: rgba(192,64,58,0.10);
+    --blue: #3a7eb5; --blue-soft: rgba(58,126,181,0.10);
+    --purple: #7040b8; --purple-soft: rgba(112,64,184,0.10);
+    --nav-h: 64px; --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
-
   #app { display: flex; flex-direction: column; height: 100%; max-width: 430px; margin: 0 auto; position: relative; }
-
   .page { display: none; flex: 1; overflow-y: auto; padding: 0 0 calc(var(--nav-h) + var(--safe-bottom) + 8px); -webkit-overflow-scrolling: touch; }
   .page.active { display: block; }
   .page::-webkit-scrollbar { display: none; }
   .page { scrollbar-width: none; }
-
-  nav {
-    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 430px;
-    height: calc(var(--nav-h) + var(--safe-bottom));
-    background: var(--surface); border-top: 1px solid var(--border);
-    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
-    display: flex; padding-bottom: var(--safe-bottom); z-index: 100;
-  }
-  .nav-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 3px; background: none; border: none; color: var(--text-dim);
-    font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500;
-    letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; transition: color 0.18s; padding-top: 8px;
-  }
+  nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; height: calc(var(--nav-h) + var(--safe-bottom)); background: var(--surface); border-top: 1px solid var(--border); box-shadow: 0 -4px 16px rgba(0,0,0,0.06); display: flex; padding-bottom: var(--safe-bottom); z-index: 100; }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; background: none; border: none; color: var(--text-dim); font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; transition: color 0.18s; padding-top: 8px; }
   .nav-btn svg { width: 20px; height: 20px; }
   .nav-btn.active { color: var(--accent); }
-
   .page-header { padding: 24px 20px 16px; position: sticky; top: 0; background: var(--bg); z-index: 10; }
   .page-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--text); }
   .page-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
-
   .stat-row { display: flex; gap: 10px; padding: 0 16px; margin-bottom: 12px; }
   .stat-box { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
   .stat-box .lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
   .stat-box .val { font-size: 20px; font-family: 'DM Serif Display', serif; margin-top: 4px; }
-
   .alloc-bar { height: 8px; border-radius: 4px; overflow: hidden; display: flex; gap: 2px; margin: 0 16px 8px; }
-  .alloc-seg { height: 100%; border-radius: 2px; transition: flex 0.4s; }
+  .alloc-seg { height: 100%; border-radius: 2px; }
   .alloc-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 0 16px; margin-bottom: 16px; }
   .alloc-dot { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-muted); }
   .alloc-dot span { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-
   .section-title { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); padding: 16px 16px 8px; }
-
   .totals-section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; margin: 0 16px 12px; overflow: hidden; }
   .acct-row { display: flex; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--border); gap: 12px; }
   .acct-row:last-child { border-bottom: none; }
@@ -82,12 +48,10 @@
   .acct-name { font-weight: 500; flex: 1; }
   .acct-bal { font-family: 'DM Serif Display', serif; font-size: 17px; }
   .acct-edit { font-size: 12px; color: var(--text-muted); background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
-
   .next-banner { margin: 16px 16px 12px; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 14px; padding: 16px; }
   .next-banner-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
   .next-banner-date { font-family: 'DM Serif Display', serif; font-size: 20px; }
   .next-banner-who { font-size: 13px; color: var(--text-muted); }
-
   .acct-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; margin: 0 16px 10px; overflow: hidden; }
   .acct-card-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; transition: background 0.15s; }
   .acct-card-header:active { background: var(--surface2); }
@@ -98,7 +62,6 @@
   .acct-card.open .acct-card-body { display: block; }
   .chevron { transition: transform 0.2s; color: var(--text-dim); }
   .acct-card.open .chevron { transform: rotate(180deg); }
-
   .cat-row { padding: 12px 16px; border-bottom: 1px solid var(--border); }
   .cat-row:last-child { border-bottom: none; }
   .cat-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
@@ -107,7 +70,6 @@
   .progress-track { height: 4px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
   .cat-remaining { font-size: 13px; margin-top: 4px; font-weight: 500; }
-
   .cc-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; margin: 0 16px 12px; overflow: hidden; }
   .cc-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 16px; }
   .cc-name { font-weight: 600; font-size: 16px; }
@@ -118,7 +80,6 @@
   .cc-meta-item .val { font-size: 14px; font-weight: 500; }
   .cc-util-bar { height: 4px; background: var(--surface3); border-radius: 2px; overflow: hidden; margin: 0 16px 16px; }
   .cc-util-fill { height: 100%; border-radius: 2px; }
-
   .month-group { margin-bottom: 4px; }
   .month-label { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); padding: 12px 16px 6px; }
   .paycheck-row { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); gap: 12px; background: var(--surface); margin: 0 16px 2px; border-radius: 10px; }
@@ -128,72 +89,102 @@
   .paycheck-who { font-size: 12px; color: var(--text-muted); }
   .paycheck-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; letter-spacing: 0.04em; }
   .badge-jcfs { background: var(--purple-soft); color: var(--purple); }
-  .badge-erc { background: var(--blue-soft); color: var(--blue); }
   .badge-arcus { background: var(--blue-soft); color: var(--blue); }
-  .badge-received { background: var(--green-soft); color: var(--green); }
   .mark-btn { font-size: 11px; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
   .mark-btn:active { background: var(--surface3); }
-
   .tab-row { display: flex; gap: 8px; padding: 0 16px 12px; }
   .tab-btn { flex: 1; padding: 8px; border-radius: 10px; border: 1px solid var(--border); background: none; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
   .tab-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-
   .exp-cat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; margin: 0 16px 10px; overflow: hidden; }
   .exp-cat-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; }
   .exp-cat-header:active { background: var(--surface2); }
   .exp-cat-name { font-weight: 600; flex: 1; }
   .exp-cat-body { display: none; border-top: 1px solid var(--border); }
   .exp-cat-card.open .exp-cat-body { display: block; }
-
   .txn-row { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
   .txn-row:last-child { border-bottom: none; }
   .txn-date { font-size: 12px; color: var(--text-muted); width: 70px; }
   .txn-loc { flex: 1; font-size: 13px; }
   .txn-amt { font-size: 14px; font-weight: 600; }
-  .txn-amt.negative { color: var(--green); }
-
   .fab { position: fixed; bottom: calc(var(--nav-h) + var(--safe-bottom) + 16px); right: calc(50% - 215px + 20px); width: 52px; height: 52px; border-radius: 50%; background: var(--accent); border: none; color: #fff; font-size: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(154,122,66,0.35); z-index: 90; transition: transform 0.15s; }
   .fab:active { transform: scale(0.93); }
   @media (max-width: 430px) { .fab { right: 20px; } }
-
   .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; align-items: flex-end; justify-content: center; }
   .modal-bg.open { display: flex; }
   .modal { background: var(--surface); border-radius: 20px 20px 0 0; border: 1px solid var(--border); width: 100%; max-width: 430px; padding: 20px 20px calc(20px + var(--safe-bottom)); max-height: 85vh; overflow-y: auto; }
+  .modal::-webkit-scrollbar { display: none; }
   .modal-title { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 16px; }
   .form-group { margin-bottom: 14px; }
   .form-label { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-  .form-input, .form-select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; outline: none; -webkit-appearance: none; }
+  .form-input, .form-select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; outline: none; -webkit-appearance: none; appearance: none; }
   .form-input:focus, .form-select:focus { border-color: var(--accent); }
   .form-actions { display: flex; gap: 10px; margin-top: 18px; }
   .btn-primary { flex: 1; background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; }
   .btn-secondary { flex: 1; background: none; color: var(--text-muted); border: 1px solid var(--border); border-radius: 12px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 15px; cursor: pointer; }
-
+  .sync-bar { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 600; text-align: center; padding: 6px; z-index: 999; display: none; letter-spacing: 0.04em; }
+  .sync-bar.show { display: block; }
+  .sync-bar.error { background: var(--red); }
   .toast { position: fixed; bottom: calc(var(--nav-h) + var(--safe-bottom) + 80px); left: 50%; transform: translateX(-50%); background: var(--text); color: var(--surface); border-radius: 10px; padding: 10px 18px; font-size: 14px; z-index: 300; opacity: 0; transition: opacity 0.25s; white-space: nowrap; }
   .toast.show { opacity: 1; }
 
-  .empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-  .empty p { margin-top: 8px; font-size: 14px; }
+  /* ── LOADING & LOGIN ── */
+  .full-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 500; padding: 32px; max-width: 430px; margin: 0 auto; }
+  .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .login-logo { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--text); margin-bottom: 6px; }
+  .login-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 40px; }
+  .login-box { width: 100%; }
+  .login-box .form-group { margin-bottom: 14px; }
+  .login-btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 15px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 6px; }
+  .login-btn:active { opacity: 0.9; }
+  .login-error { font-size: 13px; color: var(--red); text-align: center; margin-top: 12px; min-height: 18px; }
+  .signout-btn { font-size: 12px; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 4px 0; text-decoration: underline; }
 </style>
 </head>
 <body>
-<div id="app">
+
+<!-- LOADING SCREEN -->
+<div class="full-screen" id="screen-loading">
+  <div class="spinner"></div>
+  <p style="font-size:14px;color:var(--text-muted)">Loading…</p>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div class="full-screen" id="screen-login" style="display:none">
+  <div class="login-logo">Finances</div>
+  <div class="login-sub">Sign in to continue</div>
+  <div class="login-box">
+    <div class="form-group">
+      <div class="form-label">Email</div>
+      <input class="form-input" type="email" id="login-email" placeholder="you@email.com" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <div class="form-label">Password</div>
+      <input class="form-input" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="sync-bar" id="sync-bar"></div>
+
+<div id="app" style="display:none">
 
   <!-- OVERVIEW -->
   <div class="page active" id="page-overview">
     <div class="page-header">
-      <div class="page-title">Finances</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="page-title">Finances</div>
+        <button class="signout-btn" onclick="doSignOut()">Sign out</button>
+      </div>
       <div class="page-subtitle" id="overview-date"></div>
     </div>
     <div id="next-paycheck-banner"></div>
     <div class="stat-row">
-      <div class="stat-box">
-        <div class="lbl">Total Savings</div>
-        <div class="val green" id="total-savings" style="color:var(--green)">—</div>
-      </div>
-      <div class="stat-box">
-        <div class="lbl">Credit Card Debt</div>
-        <div class="val red" id="total-cc" style="color:var(--red)">—</div>
-      </div>
+      <div class="stat-box"><div class="lbl">True Savings</div><div class="val" id="total-savings" style="color:var(--green)">—</div></div>
+      <div class="stat-box"><div class="lbl">Credit Card Debt</div><div class="val" id="total-cc" style="color:var(--red)">—</div></div>
     </div>
     <div class="section-title">$730 per paycheck</div>
     <div class="alloc-bar" id="alloc-bar"></div>
@@ -206,10 +197,7 @@
 
   <!-- ACCOUNTS -->
   <div class="page" id="page-accounts">
-    <div class="page-header">
-      <div class="page-title">Accounts</div>
-      <div class="page-subtitle">Envelope budgets</div>
-    </div>
+    <div class="page-header"><div class="page-title">Accounts</div><div class="page-subtitle">Envelope budgets</div></div>
     <div class="section-title">$730 per paycheck</div>
     <div class="alloc-bar" id="alloc-bar-2"></div>
     <div class="alloc-legend" id="alloc-legend-2"></div>
@@ -218,28 +206,19 @@
 
   <!-- CARDS -->
   <div class="page" id="page-cards">
-    <div class="page-header">
-      <div class="page-title">Credit Cards</div>
-      <div class="page-subtitle" id="cards-subtitle">—</div>
-    </div>
+    <div class="page-header"><div class="page-title">Credit Cards</div><div class="page-subtitle" id="cards-subtitle">—</div></div>
     <div id="cc-cards"></div>
   </div>
 
   <!-- PAYCHECKS -->
   <div class="page" id="page-paychecks">
-    <div class="page-header">
-      <div class="page-title">Paychecks</div>
-      <div class="page-subtitle">2026 schedule</div>
-    </div>
+    <div class="page-header"><div class="page-title">Paychecks</div><div class="page-subtitle">2026 schedule</div></div>
     <div id="paycheck-list"></div>
   </div>
 
   <!-- EXPENSES -->
   <div class="page" id="page-expenses">
-    <div class="page-header">
-      <div class="page-title">Expenses</div>
-      <div class="page-subtitle" id="expenses-subtitle">May 2026</div>
-    </div>
+    <div class="page-header"><div class="page-title">Expenses</div><div class="page-subtitle" id="expenses-subtitle"></div></div>
     <div class="tab-row">
       <button class="tab-btn active" onclick="switchExpTab('category')">By Category</button>
       <button class="tab-btn" onclick="switchExpTab('account')">By Account</button>
@@ -247,65 +226,26 @@
     <div id="expenses-content"></div>
   </div>
 
-  <!-- NAV -->
   <nav>
-    <button class="nav-btn active" onclick="showPage('overview',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      Overview
-    </button>
-    <button class="nav-btn" onclick="showPage('accounts',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Accounts
-    </button>
-    <button class="nav-btn" onclick="showPage('cards',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-      Cards
-    </button>
-    <button class="nav-btn" onclick="showPage('paychecks',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-      Paychecks
-    </button>
-    <button class="nav-btn" onclick="showPage('expenses',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      Expenses
-    </button>
+    <button class="nav-btn active" onclick="showPage('overview',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Overview</button>
+    <button class="nav-btn" onclick="showPage('accounts',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Accounts</button>
+    <button class="nav-btn" onclick="showPage('cards',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Cards</button>
+    <button class="nav-btn" onclick="showPage('paychecks',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Paychecks</button>
+    <button class="nav-btn" onclick="showPage('expenses',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Expenses</button>
   </nav>
 
-  <!-- FAB -->
   <button class="fab" id="fab" onclick="openAddExpense()" style="display:none">+</button>
 
   <!-- MODAL: Add Expense -->
   <div class="modal-bg" id="modal-expense">
     <div class="modal">
       <div class="modal-title">Log Expense</div>
-      <div class="form-group">
-        <div class="form-label">Account</div>
-        <select class="form-select" id="exp-account" onchange="updateCategoryDropdown()">
-          <option value="">Select account…</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <div class="form-label">Category</div>
-        <select class="form-select" id="exp-category">
-          <option value="">Select account first…</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <div class="form-label">Amount</div>
-        <input class="form-input" type="number" id="exp-amount" placeholder="0.00" min="0" step="0.01">
-      </div>
-      <div class="form-group">
-        <div class="form-label">Description (optional)</div>
-        <input class="form-input" type="text" id="exp-desc" placeholder="Costco, Whole Foods…">
-      </div>
-      <div class="form-group">
-        <div class="form-label">Date</div>
-        <input class="form-input" type="date" id="exp-date">
-      </div>
-      <div class="form-actions">
-        <button class="btn-secondary" onclick="closeModal('modal-expense')">Cancel</button>
-        <button class="btn-primary" onclick="saveExpense()">Save</button>
-      </div>
+      <div class="form-group"><div class="form-label">Account</div><select class="form-select" id="exp-account" onchange="updateCategoryDropdown()"><option value="">Select account…</option></select></div>
+      <div class="form-group"><div class="form-label">Category</div><select class="form-select" id="exp-category"><option value="">Select account first…</option></select></div>
+      <div class="form-group"><div class="form-label">Amount</div><input class="form-input" type="number" id="exp-amount" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><div class="form-label">Description (optional)</div><input class="form-input" type="text" id="exp-desc" placeholder="Costco, Whole Foods…"></div>
+      <div class="form-group"><div class="form-label">Date</div><input class="form-input" type="date" id="exp-date"></div>
+      <div class="form-actions"><button class="btn-secondary" onclick="closeModal('modal-expense')">Cancel</button><button class="btn-primary" onclick="saveExpense()">Save</button></div>
     </div>
   </div>
 
@@ -313,48 +253,25 @@
   <div class="modal-bg" id="modal-balance">
     <div class="modal">
       <div class="modal-title" id="balance-modal-title">Edit Balance</div>
-      <div class="form-group">
-        <div class="form-label">Current Balance</div>
-        <input class="form-input" type="number" id="balance-input" step="0.01">
-      </div>
-      <div class="form-actions">
-        <button class="btn-secondary" onclick="closeModal('modal-balance')">Cancel</button>
-        <button class="btn-primary" onclick="saveBalance()">Save</button>
-      </div>
+      <div class="form-group"><div class="form-label">Current Balance</div><input class="form-input" type="number" id="balance-input" step="0.01"></div>
+      <div class="form-actions"><button class="btn-secondary" onclick="closeModal('modal-balance')">Cancel</button><button class="btn-primary" onclick="saveBalance()">Save</button></div>
     </div>
   </div>
 
-  <!-- MODAL: Edit CC Balance -->
+  <!-- MODAL: CC Transaction -->
   <div class="modal-bg" id="modal-cc-balance">
     <div class="modal">
       <div class="modal-title" id="cc-balance-title">Card Transaction</div>
       <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px">Current balance: <span id="cc-current-bal" style="font-weight:600;color:var(--text)">—</span></div>
-
-      <!-- Type toggle -->
       <div class="tab-row" style="margin-bottom:14px;padding:0">
         <button class="tab-btn active" id="cc-type-charge" onclick="setCCType('charge')">+ Charge</button>
         <button class="tab-btn" id="cc-type-payment" onclick="setCCType('payment')">− Payment</button>
       </div>
-
-      <div class="form-group">
-        <div class="form-label">Amount</div>
-        <input class="form-input" type="number" id="cc-payment-input" placeholder="0.00" min="0" step="0.01">
-      </div>
-      <div class="form-group">
-        <div class="form-label">Description (optional)</div>
-        <input class="form-input" type="text" id="cc-txn-desc" placeholder="Where did you spend?">
-      </div>
-      <div class="form-group">
-        <div class="form-label">Date</div>
-        <input class="form-input" type="date" id="cc-txn-date">
-      </div>
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:4px;font-size:13px;color:var(--text-muted)">
-        New balance: <span id="cc-new-bal-preview" style="font-weight:600;color:var(--text)">—</span>
-      </div>
-      <div class="form-actions">
-        <button class="btn-secondary" onclick="closeModal('modal-cc-balance')">Cancel</button>
-        <button class="btn-primary" id="cc-save-btn" onclick="saveCCTransaction()">Save</button>
-      </div>
+      <div class="form-group"><div class="form-label">Amount</div><input class="form-input" type="number" id="cc-payment-input" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="form-group"><div class="form-label">Description (optional)</div><input class="form-input" type="text" id="cc-txn-desc" placeholder="Where did you spend?"></div>
+      <div class="form-group"><div class="form-label">Date</div><input class="form-input" type="date" id="cc-txn-date"></div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:4px;font-size:13px;color:var(--text-muted)">New balance: <span id="cc-new-bal-preview" style="font-weight:600;color:var(--text)">—</span></div>
+      <div class="form-actions"><button class="btn-secondary" onclick="closeModal('modal-cc-balance')">Cancel</button><button class="btn-primary" onclick="saveCCTransaction()">Save</button></div>
     </div>
   </div>
 
@@ -367,8 +284,7 @@
       <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px">Allocation</div>
       <div id="paycheck-confirm-rows"></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-weight:600;font-size:15px">
-        <span>Total deposited</span>
-        <span id="paycheck-confirm-total" style="color:var(--green)"></span>
+        <span>Total deposited</span><span id="paycheck-confirm-total" style="color:var(--green)"></span>
       </div>
       <div class="form-actions" style="margin-top:8px">
         <button class="btn-secondary" onclick="closeModal('modal-paycheck')">Cancel</button>
@@ -380,11 +296,39 @@
   <div class="toast" id="toast"></div>
 </div>
 
-<script>
-// ═══════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════
+<!-- Firebase -->
+<script type="module">
+import { initializeApp }                              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue }             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword,
+         signOut, onAuthStateChanged }                from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyCoC4hdiurQKItSRl8dKZtBfkqvlbseVsk",
+  authDomain: "personal-finances-cp-b8e10.firebaseapp.com",
+  databaseURL: "https://personal-finances-cp-b8e10-default-rtdb.firebaseio.com",
+  projectId: "personal-finances-cp-b8e10",
+  storageBucket: "personal-finances-cp-b8e10.firebasestorage.app",
+  messagingSenderId: "652248413574",
+  appId: "1:652248413574:web:d9a0de706be58639e7a807"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db   = getDatabase(firebaseApp);
+const auth = getAuth(firebaseApp);
+const dataRef = ref(db, 'finances');
+
+// Expose to global scope
+window._fbSet      = data => set(dataRef, data);
+window._fbOnValue  = cb   => onValue(dataRef, cb);
+window._fbSignIn   = (email, password) => signInWithEmailAndPassword(auth, email, password);
+window._fbSignOut  = () => signOut(auth);
+window._fbAuthChange = cb => onAuthStateChanged(auth, cb);
+
+window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<script>
 const DEFAULT_STATE = {
   accounts: {
     bmo:       { name: 'BMO', balance: 70.84, color: '#9a7a42', alloc: 100 },
@@ -402,165 +346,279 @@ const DEFAULT_STATE = {
     kay:           { name: 'Kay Jewelers',   balance: 0,        limit: 8500,  apr: 35.99, due: '12th', color: '#c0403a' },
   },
   categories: {
-    bmo:      [{ id:'groceries',  name:'Groceries',         budget:400,  perPaycheck:100 }],
+    bmo:      [{ id:'groceries', name:'Groceries', budget:400, perPaycheck:100 }],
     co_check: [
-      { id:'phone_bill',  name:'Phone Bill',    budget:132,  perPaycheck:33 },
-      { id:'gas_util',    name:'Gas (Utility)', budget:100,  perPaycheck:25 },
-      { id:'electricity', name:'Electricity',   budget:100,  perPaycheck:25 },
-      { id:'internet',    name:'Internet',      budget:50,   perPaycheck:13 },
-      { id:'car_gas',     name:'Car Gas',       budget:100,  perPaycheck:25 },
+      { id:'phone_bill', name:'Phone Bill', budget:132, perPaycheck:33 },
+      { id:'gas_util', name:'Gas (Utility)', budget:100, perPaycheck:25 },
+      { id:'electricity', name:'Electricity', budget:100, perPaycheck:25 },
+      { id:'internet', name:'Internet', budget:50, perPaycheck:13 },
+      { id:'car_gas', name:'Car Gas', budget:100, perPaycheck:25 },
     ],
     co_save: [
-      { id:'dog_food',    name:'Dog Food',          budget:50,  perPaycheck:5 },
-      { id:'dog_bath',    name:'Dog Bath',           budget:120, perPaycheck:30 },
-      { id:'sunny_pills', name:'Sunny Pills',        budget:36,  perPaycheck:4.5 },
-      { id:'gym',         name:'Gym Membership',     budget:140, perPaycheck:35 },
-      { id:'costco_mem',  name:'Costco Membership',  budget:60,  perPaycheck:2 },
-      { id:'sunny_vet',   name:'Sunny Vet',          budget:42,  perPaycheck:10.5 },
+      { id:'dog_food', name:'Dog Food', budget:50, perPaycheck:5 },
+      { id:'dog_bath', name:'Dog Bath', budget:120, perPaycheck:30 },
+      { id:'sunny_pills', name:'Sunny Pills', budget:36, perPaycheck:4.5 },
+      { id:'gym', name:'Gym Membership', budget:140, perPaycheck:35 },
+      { id:'costco_mem', name:'Costco Membership', budget:60, perPaycheck:2 },
+      { id:'sunny_vet', name:'Sunny Vet', budget:42, perPaycheck:10.5 },
     ],
     boa: [
-      { id:'car_ins',     name:'Car Insurance',      budget:146,   perPaycheck:37 },
-      { id:'city_stick',  name:'City Sticker',       budget:8.5,   perPaycheck:2.25 },
-      { id:'reg',         name:'Registration',       budget:16.66, perPaycheck:4.5 },
-      { id:'jewelry_ins', name:'Jewelry Insurance',  budget:13,    perPaycheck:3.25 },
+      { id:'car_ins', name:'Car Insurance', budget:146, perPaycheck:37 },
+      { id:'city_stick', name:'City Sticker', budget:8.5, perPaycheck:2.25 },
+      { id:'reg', name:'Registration', budget:16.66, perPaycheck:4.5 },
+      { id:'jewelry_ins', name:'Jewelry Insurance', budget:13, perPaycheck:3.25 },
     ],
     chase:     [{ id:'rent', name:'Rent', budget:1500, perPaycheck:375 }],
     amex_save: [],
   },
   paychecks: [
-    {date:'2026-01-16',who:'Carlos',   source:'ERC',   received:true},
-    {date:'2026-01-23',who:'Priscilla',source:'JCFS',  received:true},
-    {date:'2026-01-30',who:'Carlos',   source:'ERC',   received:true},
-    {date:'2026-02-10',who:'Priscilla',source:'JCFS',  received:true},
-    {date:'2026-02-13',who:'Carlos',   source:'ERC',   received:true},
-    {date:'2026-02-25',who:'Priscilla',source:'JCFS',  received:true},
-    {date:'2026-02-28',who:'Carlos',   source:'Arcus', received:true},
-    {date:'2026-03-10',who:'Priscilla',source:'JCFS',  received:true},
-    {date:'2026-03-15',who:'Carlos',   source:'Arcus', received:true},
-    {date:'2026-03-25',who:'Priscilla',source:'JCFS',  received:true},
-    {date:'2026-03-31',who:'Carlos',   source:'Arcus', received:true},
-    {date:'2026-04-10',who:'Priscilla',source:'JCFS',  received:true},
-    {date:'2026-04-15',who:'Carlos',   source:'Arcus', received:true},
-    {date:'2026-04-24',who:'Priscilla',source:'JCFS',  received:true},
-    {date:'2026-04-30',who:'Carlos',   source:'Arcus', received:true},
-    {date:'2026-05-08',who:'Priscilla',source:'JCFS',  received:true},
-    {date:'2026-05-15',who:'Carlos',   source:'Arcus', received:true},
-    {date:'2026-05-22',who:'Priscilla',source:'JCFS',  received:true},
-    {date:'2026-05-30',who:'Carlos',   source:'Arcus', received:true},
-    {date:'2026-06-10',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-06-15',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-06-25',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-06-30',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-07-10',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-07-15',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-07-24',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-07-30',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-08-10',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-08-15',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-08-25',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-08-30',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-09-10',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-09-15',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-09-25',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-09-30',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-10-09',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-10-15',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-10-23',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-10-30',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-11-10',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-11-15',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-11-25',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-11-30',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-12-10',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-12-15',who:'Carlos',   source:'Arcus', received:false},
-    {date:'2026-12-24',who:'Priscilla',source:'JCFS',  received:false},
-    {date:'2026-12-30',who:'Carlos',   source:'Arcus', received:false},
+    {date:'2026-01-16',who:'Carlos',source:'ERC',received:true},{date:'2026-01-23',who:'Priscilla',source:'JCFS',received:true},{date:'2026-01-30',who:'Carlos',source:'ERC',received:true},
+    {date:'2026-02-10',who:'Priscilla',source:'JCFS',received:true},{date:'2026-02-13',who:'Carlos',source:'ERC',received:true},{date:'2026-02-25',who:'Priscilla',source:'JCFS',received:true},{date:'2026-02-28',who:'Carlos',source:'Arcus',received:true},
+    {date:'2026-03-10',who:'Priscilla',source:'JCFS',received:true},{date:'2026-03-15',who:'Carlos',source:'Arcus',received:true},{date:'2026-03-25',who:'Priscilla',source:'JCFS',received:true},{date:'2026-03-31',who:'Carlos',source:'Arcus',received:true},
+    {date:'2026-04-10',who:'Priscilla',source:'JCFS',received:true},{date:'2026-04-15',who:'Carlos',source:'Arcus',received:true},{date:'2026-04-24',who:'Priscilla',source:'JCFS',received:true},{date:'2026-04-30',who:'Carlos',source:'Arcus',received:true},
+    {date:'2026-05-08',who:'Priscilla',source:'JCFS',received:true},{date:'2026-05-15',who:'Carlos',source:'Arcus',received:true},{date:'2026-05-22',who:'Priscilla',source:'JCFS',received:true},{date:'2026-05-30',who:'Carlos',source:'Arcus',received:true},
+    {date:'2026-06-10',who:'Priscilla',source:'JCFS',received:false},{date:'2026-06-15',who:'Carlos',source:'Arcus',received:false},{date:'2026-06-25',who:'Priscilla',source:'JCFS',received:false},{date:'2026-06-30',who:'Carlos',source:'Arcus',received:false},
+    {date:'2026-07-10',who:'Priscilla',source:'JCFS',received:false},{date:'2026-07-15',who:'Carlos',source:'Arcus',received:false},{date:'2026-07-24',who:'Priscilla',source:'JCFS',received:false},{date:'2026-07-30',who:'Carlos',source:'Arcus',received:false},
+    {date:'2026-08-10',who:'Priscilla',source:'JCFS',received:false},{date:'2026-08-15',who:'Carlos',source:'Arcus',received:false},{date:'2026-08-25',who:'Priscilla',source:'JCFS',received:false},{date:'2026-08-30',who:'Carlos',source:'Arcus',received:false},
+    {date:'2026-09-10',who:'Priscilla',source:'JCFS',received:false},{date:'2026-09-15',who:'Carlos',source:'Arcus',received:false},{date:'2026-09-25',who:'Priscilla',source:'JCFS',received:false},{date:'2026-09-30',who:'Carlos',source:'Arcus',received:false},
+    {date:'2026-10-09',who:'Priscilla',source:'JCFS',received:false},{date:'2026-10-15',who:'Carlos',source:'Arcus',received:false},{date:'2026-10-23',who:'Priscilla',source:'JCFS',received:false},{date:'2026-10-30',who:'Carlos',source:'Arcus',received:false},
+    {date:'2026-11-10',who:'Priscilla',source:'JCFS',received:false},{date:'2026-11-15',who:'Carlos',source:'Arcus',received:false},{date:'2026-11-25',who:'Priscilla',source:'JCFS',received:false},{date:'2026-11-30',who:'Carlos',source:'Arcus',received:false},
+    {date:'2026-12-10',who:'Priscilla',source:'JCFS',received:false},{date:'2026-12-15',who:'Carlos',source:'Arcus',received:false},{date:'2026-12-24',who:'Priscilla',source:'JCFS',received:false},{date:'2026-12-30',who:'Carlos',source:'Arcus',received:false},
   ],
   expenses: [],
+  ccTransactions: [],
 };
 
-let state;
-
-function loadState() {
-  try {
-    const saved = localStorage.getItem('casa_finances_v2');
-    if (saved) state = JSON.parse(saved);
-    else state = JSON.parse(JSON.stringify(DEFAULT_STATE));
-  } catch(e) {
-    state = JSON.parse(JSON.stringify(DEFAULT_STATE));
-  }
-}
-
-function saveState() {
-  try { localStorage.setItem('casa_finances_v2', JSON.stringify(state)); } catch(e){}
-}
-
-// ═══════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════
+let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+let isSaving = false;
 
 const $ = id => document.getElementById(id);
 const fmt = n => '$' + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+const today = () => new Date().toISOString().slice(0,10);
+const pld = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
+const formatDate = s => pld(s).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+const formatDateLong = s => pld(s).toLocaleDateString('en-US', {weekday:'short', month:'long', day:'numeric'});
+const getMonthName = s => pld(s).toLocaleDateString('en-US', {month:'long', year:'numeric'});
+const getCurrentMonth = () => { const d = new Date(); return {year: d.getFullYear(), month: d.getMonth()+1}; };
+const progressColor = p => p >= 1 ? 'var(--red)' : p >= 0.8 ? 'var(--accent)' : 'var(--green)';
 
-function today() { return new Date().toISOString().slice(0,10); }
-
-function parseLocalDate(s) {
-  const [y,m,d] = s.split('-').map(Number);
-  return new Date(y, m-1, d);
+function showSyncBar(msg, isError) {
+  const bar = $('sync-bar');
+  bar.textContent = msg;
+  bar.className = 'sync-bar show' + (isError ? ' error' : '');
+  clearTimeout(bar._t);
+  if (!isError) bar._t = setTimeout(() => bar.classList.remove('show'), 2000);
 }
 
-function formatDate(s) {
-  return parseLocalDate(s).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+function showToast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-function formatDateLong(s) {
-  return parseLocalDate(s).toLocaleDateString('en-US', {weekday:'short', month:'long', day:'numeric'});
+// ── AUTH ─────────────────────────────────────────────────
+
+async function doLogin() {
+  const email = $('login-email').value.trim();
+  const password = $('login-password').value;
+  $('login-error').textContent = '';
+  if (!email || !password) { $('login-error').textContent = 'Please enter your email and password.'; return; }
+  try {
+    await window._fbSignIn(email, password);
+    // onAuthStateChanged will handle showing the app
+  } catch(e) {
+    $('login-error').textContent = 'Incorrect email or password.';
+  }
 }
 
-function getMonthName(s) {
-  return parseLocalDate(s).toLocaleDateString('en-US', {month:'long', year:'numeric'});
+// Allow pressing Enter to submit login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && $('screen-login').style.display !== 'none') doLogin();
+});
+
+async function doSignOut() {
+  await window._fbSignOut();
+  $('app').style.display = 'none';
+  $('screen-login').style.display = 'flex';
+  $('login-email').value = '';
+  $('login-password').value = '';
 }
+
+// ── FIREBASE INIT ─────────────────────────────────────────
+
+function initFirebase() {
+  window._fbAuthChange(user => {
+    if (user) {
+      // Signed in — load data
+      $('screen-login').style.display = 'none';
+      $('screen-loading').style.display = 'flex';
+      window._fbOnValue(snapshot => {
+        const data = snapshot.val();
+        if (data) {
+          state = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), data);
+        }
+        $('screen-loading').style.display = 'none';
+        $('app').style.display = 'flex';
+        renderOverview();
+      });
+    } else {
+      // Not signed in — show login
+      $('screen-loading').style.display = 'none';
+      $('screen-login').style.display = 'flex';
+      $('app').style.display = 'none';
+    }
+  });
+}
+
+window.addEventListener('firebase-ready', initFirebase);
+
+// ── SAVE ─────────────────────────────────────────────────
+
+async function saveState() {
+  if (isSaving) return;
+  isSaving = true;
+  showSyncBar('Saving…');
+  try {
+    await window._fbSet(JSON.parse(JSON.stringify(state)));
+    showSyncBar('Saved ✓');
+  } catch(e) {
+    showSyncBar('Save failed — check connection', true);
+  }
+  isSaving = false;
+}
+
+// ── RENDER ────────────────────────────────────────────────
 
 function getNextPaycheck() {
   const t = today();
-  return state.paychecks.find(p => p.date >= t && !p.received)
-      || state.paychecks.find(p => p.date >= t);
-}
-
-function getCurrentMonth() {
-  const d = new Date();
-  return { year: d.getFullYear(), month: d.getMonth() + 1 };
+  return state.paychecks.find(p => p.date >= t && !p.received) || state.paychecks.find(p => p.date >= t);
 }
 
 function getSpentInMonth(accountId, categoryId, year, month) {
   const ym = `${year}-${String(month).padStart(2,'0')}`;
-  return state.expenses
-    .filter(e => e.accountId === accountId && e.categoryId === categoryId && e.date.slice(0,7) === ym)
-    .reduce((s, e) => s + e.amount, 0);
+  return (state.expenses || []).filter(e => e.accountId === accountId && e.categoryId === categoryId && e.date.slice(0,7) === ym).reduce((s,e) => s + e.amount, 0);
 }
 
-function progressColor(pct) {
-  if (pct >= 1)   return 'var(--red)';
-  if (pct >= 0.8) return 'var(--accent)';
-  return 'var(--green)';
+function renderAllocBar(barId, legendId) {
+  const bar = $(barId), legend = $(legendId); bar.innerHTML = ''; legend.innerHTML = '';
+  Object.entries(state.accounts).forEach(([id, a]) => {
+    if (!a.alloc) return;
+    const seg = document.createElement('div'); seg.className = 'alloc-seg'; seg.style.cssText = `background:${a.color};flex:${a.alloc}`; bar.appendChild(seg);
+    const dot = document.createElement('div'); dot.className = 'alloc-dot'; dot.innerHTML = `<span style="background:${a.color}"></span>${a.name.split(' ')[0]} $${a.alloc}`; legend.appendChild(dot);
+  });
 }
 
-function showToast(msg) {
-  const t = $('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+function renderOverview() {
+  $('overview-date').textContent = new Date().toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  const next = getNextPaycheck();
+  $('next-paycheck-banner').innerHTML = next ? `<div class="next-banner"><div class="next-banner-label">Next Paycheck</div><div class="next-banner-date">${formatDateLong(next.date)}</div><div class="next-banner-who">${next.who} · ${next.source}</div></div>` : '';
+  $('total-savings').textContent = fmt(state.accounts.amex_save.balance);
+  $('total-cc').textContent = fmt(Object.values(state.creditCards).reduce((s,c) => s+c.balance, 0));
+  renderAllocBar('alloc-bar', 'alloc-legend');
+  const bl = $('bank-list'); bl.innerHTML = '';
+  Object.entries(state.accounts).forEach(([id, a]) => {
+    const r = document.createElement('div'); r.className = 'acct-row';
+    r.innerHTML = `<div class="acct-dot" style="background:${a.color}"></div><div class="acct-name">${a.name}</div><div class="acct-bal" style="color:var(--text)">${fmt(a.balance)}</div><div class="acct-edit" onclick="openEditBalance('${id}')">Edit</div>`;
+    bl.appendChild(r);
+  });
+  const cl = $('cc-list-overview'); cl.innerHTML = '';
+  Object.entries(state.creditCards).forEach(([id, c]) => {
+    const r = document.createElement('div'); r.className = 'acct-row';
+    r.innerHTML = `<div class="acct-dot" style="background:${c.color}"></div><div class="acct-name">${c.name}</div><div class="acct-bal" style="color:${c.balance>0?'var(--red)':'var(--green)'}">${fmt(c.balance)}</div><div class="acct-edit" onclick="openEditCCBalance('${id}')">Edit</div>`;
+    cl.appendChild(r);
+  });
 }
 
-// ═══════════════════════════════════════
-// NAV
-// ═══════════════════════════════════════
+function renderAccounts() {
+  renderAllocBar('alloc-bar-2', 'alloc-legend-2');
+  const {year, month} = getCurrentMonth(); const container = $('account-cards'); container.innerHTML = '';
+  Object.entries(state.accounts).forEach(([id, a]) => {
+    const cats = state.categories[id] || []; const card = document.createElement('div'); card.className = 'acct-card'; card.id = 'acct-card-' + id;
+    let catsHtml = '';
+    cats.forEach(cat => {
+      const spent = getSpentInMonth(id, cat.id, year, month), pct = Math.min(spent/cat.budget,1), remaining = cat.budget - spent;
+      catsHtml += `<div class="cat-row"><div class="cat-top"><div class="cat-name">${cat.name}</div><div class="cat-nums">${fmt(spent)} / ${fmt(cat.budget)}</div></div><div class="progress-track"><div class="progress-fill" style="width:${pct*100}%;background:${progressColor(pct)}"></div></div><div class="cat-remaining" style="color:${remaining<0?'var(--red)':remaining<cat.budget*.2?'var(--accent)':'var(--green)'}">${remaining>=0?fmt(remaining)+' left':fmt(Math.abs(remaining))+' over'}</div></div>`;
+    });
+    card.innerHTML = `<div class="acct-card-header" onclick="toggleCard('acct-card-${id}')"><div class="acct-dot" style="background:${a.color}"></div><div><div class="acct-card-name">${a.name}</div><div class="acct-card-alloc">$${a.alloc}/paycheck</div></div><div class="acct-card-bal" style="color:var(--text)">${fmt(a.balance)}</div><svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="acct-card-body">${cats.length?catsHtml:'<div style="padding:16px;color:var(--text-muted);font-size:13px">General savings account</div>'}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function toggleCard(id) { $(id).classList.toggle('open'); }
+
+function renderCards() {
+  $('cards-subtitle').textContent = 'Total: ' + fmt(Object.values(state.creditCards).reduce((s,c)=>s+c.balance,0));
+  const container = $('cc-cards'); container.innerHTML = '';
+  Object.entries(state.creditCards).forEach(([id, c]) => {
+    const util = c.balance/c.limit, uc = util>.9?'var(--red)':util>.7?'var(--accent)':'var(--green)';
+    const mi = c.balance>0?(c.balance*(c.apr/100)/12).toFixed(2):'0.00';
+    const txns = (state.ccTransactions||[]).filter(t=>t.cardId===id).slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
+    const txHtml = txns.length ? txns.map(t=>`<div class="txn-row"><div class="txn-date">${formatDate(t.date)}</div><div class="txn-loc">${t.description||(t.type==='payment'?'Payment':'Charge')}</div><div class="txn-amt" style="color:${t.type==='payment'?'var(--green)':'var(--red)'}">${t.type==='payment'?'−':'+'}${fmt(t.amount)}</div></div>`).join('') : '<div style="padding:12px 16px;font-size:13px;color:var(--text-muted)">No transactions logged yet</div>';
+    const div = document.createElement('div'); div.className = 'cc-card';
+    div.innerHTML = `<div class="cc-header"><div><div class="cc-name">${c.name}</div><div class="cc-balance">${fmt(c.balance)}</div></div><div class="cc-apr">${c.apr.toFixed(2)}% APR</div></div><div class="cc-util-bar"><div class="cc-util-fill" style="width:${Math.min(util,1)*100}%;background:${uc}"></div></div><div class="cc-meta"><div class="cc-meta-item"><div class="lbl">Limit</div><div class="val">${fmt(c.limit)}</div></div><div class="cc-meta-item"><div class="lbl">Utilization</div><div class="val" style="color:${uc}">${(util*100).toFixed(0)}%</div></div><div class="cc-meta-item"><div class="lbl">Due Date</div><div class="val">${c.due}</div></div><div class="cc-meta-item"><div class="lbl">Mo. Interest</div><div class="val" style="color:${c.balance>0?'var(--red)':'var(--green)'}">$${mi}</div></div></div><div style="padding:0 16px 14px;display:flex;gap:8px"><button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center" onclick="openCCTransaction('${id}','charge')">+ Add Charge</button><button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center;color:var(--green);border-color:var(--green)" onclick="openCCTransaction('${id}','payment')">− Log Payment</button></div><div style="border-top:1px solid var(--border)"><div style="padding:10px 16px 4px;font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted)">Recent Transactions</div>${txHtml}</div>`;
+    container.appendChild(div);
+  });
+}
+
+function renderPaychecks() {
+  const t = today(), container = $('paycheck-list'); container.innerHTML = '';
+  const grouped = {}; state.paychecks.forEach(p => { const m = getMonthName(p.date); if (!grouped[m]) grouped[m]=[]; grouped[m].push(p); });
+  const nextPc = getNextPaycheck();
+  Object.entries(grouped).forEach(([month, checks]) => {
+    const group = document.createElement('div'); group.className = 'month-group';
+    group.innerHTML = `<div class="month-label">${month}</div>`;
+    checks.forEach(p => {
+      const isPast = p.date < t, isNext = nextPc && nextPc.date === p.date;
+      const badgeCls = p.source === 'JCFS' ? 'badge-jcfs' : 'badge-arcus';
+      const idx = state.paychecks.indexOf(p);
+      const row = document.createElement('div'); row.className = 'paycheck-row' + (isPast?' past':'') + (isNext?' next':'');
+      row.innerHTML = `<div><div class="paycheck-date">${formatDateLong(p.date)}</div><div class="paycheck-who">${p.who}</div></div><div class="paycheck-badge ${badgeCls}">${p.source}</div>${p.received?`<button class="mark-btn" style="color:var(--green);border-color:var(--green)" onclick="unmarkReceived(${idx})">✓ Received</button>`:`<button class="mark-btn" onclick="markReceived(${idx})">Mark received</button>`}`;
+      group.appendChild(row);
+    });
+    container.appendChild(group);
+  });
+}
+
+let expTab = 'category';
+function switchExpTab(tab) {
+  expTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active',(i===0&&tab==='category')||(i===1&&tab==='account')));
+  renderExpenses();
+}
+
+function renderExpenses() {
+  const {year, month} = getCurrentMonth();
+  $('expenses-subtitle').textContent = new Date(year,month-1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const ym = `${year}-${String(month).padStart(2,'0')}`, container = $('expenses-content'); container.innerHTML = '';
+  if (expTab === 'category') {
+    Object.entries(state.accounts).forEach(([accId, acc]) => {
+      (state.categories[accId]||[]).forEach(cat => {
+        const spent = getSpentInMonth(accId,cat.id,year,month), pct = Math.min(spent/cat.budget,1), remaining = cat.budget-spent;
+        const txns = (state.expenses||[]).filter(e=>e.accountId===accId&&e.categoryId===cat.id&&e.date.slice(0,7)===ym);
+        const txHtml = txns.length?txns.map(t=>`<div class="txn-row"><div class="txn-date">${formatDate(t.date)}</div><div class="txn-loc">${t.description||'—'}</div><div class="txn-amt" style="color:var(--red)">-${fmt(t.amount)}</div></div>`).join(''):'<div style="padding:12px 16px;font-size:13px;color:var(--text-muted)">No transactions this month</div>';
+        const card = document.createElement('div'); card.className = 'exp-cat-card';
+        card.innerHTML = `<div class="exp-cat-header" onclick="this.parentElement.classList.toggle('open')"><div class="acct-dot" style="background:${acc.color}"></div><div style="flex:1"><div class="exp-cat-name">${cat.name}</div><div style="font-size:12px;color:var(--text-muted)">${acc.name}</div></div><div style="font-size:13px;font-weight:600;color:${remaining<0?'var(--red)':'var(--text)'}">${fmt(spent)}<span style="color:var(--text-muted);font-weight:400"> / ${fmt(cat.budget)}</span></div><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px"><polyline points="6 9 12 15 18 9"/></svg></div><div class="exp-cat-body"><div class="cat-row" style="border-bottom:1px solid var(--border)"><div class="progress-track"><div class="progress-fill" style="width:${pct*100}%;background:${progressColor(pct)}"></div></div><div class="cat-remaining" style="color:${remaining<0?'var(--red)':remaining<cat.budget*.2?'var(--accent)':'var(--green)'}">${remaining>=0?fmt(remaining)+' remaining':fmt(Math.abs(remaining))+' over budget'}</div></div>${txHtml}</div>`;
+        container.appendChild(card);
+      });
+    });
+  } else {
+    Object.entries(state.accounts).forEach(([accId, acc]) => {
+      const txns = (state.expenses||[]).filter(e=>e.accountId===accId&&e.date.slice(0,7)===ym);
+      if (!txns.length) return;
+      const total = txns.reduce((s,t)=>s+t.amount,0);
+      const card = document.createElement('div'); card.className = 'exp-cat-card open';
+      card.innerHTML = `<div class="exp-cat-header" onclick="this.parentElement.classList.toggle('open')"><div class="acct-dot" style="background:${acc.color}"></div><div class="exp-cat-name">${acc.name}</div><div style="font-size:15px;font-weight:600">${fmt(total)}</div><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px"><polyline points="6 9 12 15 18 9"/></svg></div><div class="exp-cat-body">${txns.map(t=>`<div class="txn-row"><div class="txn-date">${formatDate(t.date)}</div><div class="txn-loc">${t.description||t.categoryId}</div><div class="txn-amt">${fmt(t.amount)}</div></div>`).join('')}</div>`;
+      container.appendChild(card);
+    });
+    if (!container.children.length) container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px">No expenses logged yet this month</div>';
+  }
+}
+
+// ── NAV ──────────────────────────────────────────────────
 
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  $('page-' + name).classList.add('active');
-  btn.classList.add('active');
+  $('page-' + name).classList.add('active'); btn.classList.add('active');
   $('fab').style.display = name === 'expenses' ? 'flex' : 'none';
   if (name === 'overview')  renderOverview();
   if (name === 'accounts')  renderAccounts();
@@ -569,546 +627,64 @@ function showPage(name, btn) {
   if (name === 'expenses')  renderExpenses();
 }
 
-// ═══════════════════════════════════════
-// ALLOC BAR
-// ═══════════════════════════════════════
+// ── ACTIONS ──────────────────────────────────────────────
 
-function renderAllocBar(barId, legendId) {
-  const bar    = $(barId);
-  const legend = $(legendId);
-  bar.innerHTML = '';
-  legend.innerHTML = '';
-  Object.entries(state.accounts).forEach(([id, a]) => {
-    if (!a.alloc) return;
-    const seg = document.createElement('div');
-    seg.className = 'alloc-seg';
-    seg.style.cssText = `background:${a.color};flex:${a.alloc}`;
-    bar.appendChild(seg);
-    const dot = document.createElement('div');
-    dot.className = 'alloc-dot';
-    dot.innerHTML = `<span style="background:${a.color}"></span>${a.name.split(' ')[0]} $${a.alloc}`;
-    legend.appendChild(dot);
-  });
+let editingAccountId = null;
+function openEditBalance(id) { editingAccountId=id; $('balance-modal-title').textContent='Edit '+state.accounts[id].name; $('balance-input').value=state.accounts[id].balance; $('modal-balance').classList.add('open'); }
+function saveBalance() { const val=parseFloat($('balance-input').value); if(isNaN(val))return; state.accounts[editingAccountId].balance=val; saveState(); closeModal('modal-balance'); showToast('Balance updated ✓'); renderOverview(); }
+
+let editingCCId=null, ccTxnType='charge';
+function setCCType(type) { ccTxnType=type; $('cc-type-charge').classList.toggle('active',type==='charge'); $('cc-type-payment').classList.toggle('active',type==='payment'); updateCCPreview(); }
+function updateCCPreview() { const c=state.creditCards[editingCCId],amt=parseFloat($('cc-payment-input').value)||0,nb=ccTxnType==='payment'?Math.max(c.balance-amt,0):c.balance+amt; $('cc-new-bal-preview').textContent=fmt(nb); $('cc-new-bal-preview').style.color=nb<c.balance?'var(--green)':nb>c.balance?'var(--red)':'var(--text)'; }
+function openCCTransaction(id,type) { editingCCId=id; const c=state.creditCards[id]; $('cc-balance-title').textContent=c.name; $('cc-current-bal').textContent=fmt(c.balance); $('cc-payment-input').value=''; $('cc-txn-desc').value=''; $('cc-txn-date').value=today(); $('cc-new-bal-preview').textContent=fmt(c.balance); $('cc-new-bal-preview').style.color='var(--text)'; setCCType(type); $('cc-payment-input').oninput=updateCCPreview; $('modal-cc-balance').classList.add('open'); }
+function openEditCCBalance(id) { openCCTransaction(id,'payment'); }
+function saveCCTransaction() {
+  const amount=parseFloat($('cc-payment-input').value); if(isNaN(amount)||amount<=0){showToast('Enter an amount');return;}
+  const c=state.creditCards[editingCCId],desc=$('cc-txn-desc').value.trim(),date=$('cc-txn-date').value;
+  c.balance=Math.round((ccTxnType==='payment'?Math.max(c.balance-amount,0):c.balance+amount)*100)/100;
+  if(!state.ccTransactions)state.ccTransactions=[];
+  state.ccTransactions.push({id:Date.now().toString(),cardId:editingCCId,type:ccTxnType,amount,description:desc,date});
+  saveState(); closeModal('modal-cc-balance'); showToast(ccTxnType==='payment'?`Payment of ${fmt(amount)} logged ✓`:`Charge of ${fmt(amount)} added ✓`); renderOverview(); renderCards();
 }
 
-// ═══════════════════════════════════════
-// OVERVIEW
-// ═══════════════════════════════════════
-
-function renderOverview() {
-  $('overview-date').textContent = new Date().toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-
-  // Next paycheck banner
-  const next = getNextPaycheck();
-  const banner = $('next-paycheck-banner');
-  if (next) {
-    banner.innerHTML = `<div class="next-banner">
-      <div class="next-banner-label">Next Paycheck</div>
-      <div class="next-banner-date">${formatDateLong(next.date)}</div>
-      <div class="next-banner-who">${next.who} · ${next.source}</div>
-    </div>`;
-  }
-
-  // Totals
-  const savingsTotal = state.accounts.amex_save.balance;
-  const ccTotal      = Object.values(state.creditCards).reduce((s,c) => s + c.balance, 0);
-  $('total-savings').textContent = fmt(savingsTotal);
-  $('total-cc').textContent      = fmt(ccTotal);
-
-  // Alloc bar
-  renderAllocBar('alloc-bar', 'alloc-legend');
-
-  // Bank accounts
-  const bankList = $('bank-list');
-  bankList.innerHTML = '';
-  Object.entries(state.accounts).forEach(([id, a]) => {
-    const row = document.createElement('div');
-    row.className = 'acct-row';
-    row.innerHTML = `
-      <div class="acct-dot" style="background:${a.color}"></div>
-      <div class="acct-name">${a.name}</div>
-      <div class="acct-bal" style="color:var(--text)">${fmt(a.balance)}</div>
-      <div class="acct-edit" onclick="openEditBalance('${id}')">Edit</div>`;
-    bankList.appendChild(row);
-  });
-
-  // Credit cards — show all
-  const ccList = $('cc-list-overview');
-  ccList.innerHTML = '';
-  Object.entries(state.creditCards).forEach(([id, c]) => {
-    const row = document.createElement('div');
-    row.className = 'acct-row';
-    row.innerHTML = `
-      <div class="acct-dot" style="background:${c.color}"></div>
-      <div class="acct-name">${c.name}</div>
-      <div class="acct-bal" style="color:${c.balance > 0 ? 'var(--red)' : 'var(--green)'}">${fmt(c.balance)}</div>
-      <div class="acct-edit" onclick="openEditCCBalance('${id}')">Edit</div>`;
-    ccList.appendChild(row);
-  });
+function openAddExpense() {
+  const sel=$('exp-account'); sel.innerHTML='<option value="">Select account…</option>';
+  Object.entries(state.accounts).forEach(([id,a])=>{ if((state.categories[id]||[]).length){const o=document.createElement('option');o.value=id;o.textContent=a.name;sel.appendChild(o);} });
+  $('exp-date').value=today(); $('exp-amount').value=''; $('exp-desc').value=''; $('exp-category').innerHTML='<option value="">Select account first…</option>'; $('modal-expense').classList.add('open');
 }
-
-// ═══════════════════════════════════════
-// ACCOUNTS
-// ═══════════════════════════════════════
-
-function renderAccounts() {
-  renderAllocBar('alloc-bar-2', 'alloc-legend-2');
-  const { year, month } = getCurrentMonth();
-  const container = $('account-cards');
-  container.innerHTML = '';
-
-  Object.entries(state.accounts).forEach(([id, a]) => {
-    const cats = state.categories[id] || [];
-    const card = document.createElement('div');
-    card.className = 'acct-card';
-    card.id = 'acct-card-' + id;
-
-    let catsHtml = '';
-    cats.forEach(cat => {
-      const spent     = getSpentInMonth(id, cat.id, year, month);
-      const pct       = Math.min(spent / cat.budget, 1);
-      const remaining = cat.budget - spent;
-      catsHtml += `
-        <div class="cat-row">
-          <div class="cat-top">
-            <div class="cat-name">${cat.name}</div>
-            <div class="cat-nums">${fmt(spent)} / ${fmt(cat.budget)}</div>
-          </div>
-          <div class="progress-track"><div class="progress-fill" style="width:${pct*100}%;background:${progressColor(pct)}"></div></div>
-          <div class="cat-remaining" style="color:${remaining < 0 ? 'var(--red)' : remaining < cat.budget * 0.2 ? 'var(--accent)' : 'var(--green)'}">
-            ${remaining >= 0 ? fmt(remaining) + ' left' : fmt(Math.abs(remaining)) + ' over'}
-          </div>
-        </div>`;
-    });
-
-    card.innerHTML = `
-      <div class="acct-card-header" onclick="toggleCard('acct-card-${id}')">
-        <div class="acct-dot" style="background:${a.color}"></div>
-        <div>
-          <div class="acct-card-name">${a.name}</div>
-          <div class="acct-card-alloc">$${a.alloc}/paycheck</div>
-        </div>
-        <div class="acct-card-bal" style="color:var(--text)">${fmt(a.balance)}</div>
-        <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div class="acct-card-body">
-        ${cats.length ? catsHtml : '<div style="padding:16px;color:var(--text-muted);font-size:13px">General savings account</div>'}
-      </div>`;
-    container.appendChild(card);
-  });
-}
-
-function toggleCard(id) { $(id).classList.toggle('open'); }
-
-// ═══════════════════════════════════════
-// CREDIT CARDS
-// ═══════════════════════════════════════
-
-function renderCards() {
-  const total = Object.values(state.creditCards).reduce((s,c) => s + c.balance, 0);
-  $('cards-subtitle').textContent = `Total: ${fmt(total)}`;
-  const container = $('cc-cards');
-  container.innerHTML = '';
-
-  Object.entries(state.creditCards).forEach(([id, c]) => {
-    const util       = c.balance / c.limit;
-    const utilColor  = util > 0.9 ? 'var(--red)' : util > 0.7 ? 'var(--accent)' : 'var(--green)';
-    const monthlyInt = c.balance > 0 ? (c.balance * (c.apr / 100) / 12).toFixed(2) : '0.00';
-
-    // Transaction history for this card
-    const txns = (state.ccTransactions || [])
-      .filter(t => t.cardId === id)
-      .slice().sort((a,b) => b.date.localeCompare(a.date))
-      .slice(0, 10); // show last 10
-
-    const txnsHtml = txns.length ? txns.map(t => `
-      <div class="txn-row">
-        <div class="txn-date">${formatDate(t.date)}</div>
-        <div class="txn-loc">${t.description || (t.type === 'payment' ? 'Payment' : 'Charge')}</div>
-        <div class="txn-amt" style="color:${t.type === 'payment' ? 'var(--green)' : 'var(--red)'}">
-          ${t.type === 'payment' ? '−' : '+'}${fmt(t.amount)}
-        </div>
-      </div>`).join('')
-    : `<div style="padding:12px 16px;font-size:13px;color:var(--text-muted)">No transactions logged yet</div>`;
-
-    const div = document.createElement('div');
-    div.className = 'cc-card';
-    div.innerHTML = `
-      <div class="cc-header">
-        <div>
-          <div class="cc-name">${c.name}</div>
-          <div class="cc-balance">${fmt(c.balance)}</div>
-        </div>
-        <div class="cc-apr">${c.apr.toFixed(2)}% APR</div>
-      </div>
-      <div class="cc-util-bar"><div class="cc-util-fill" style="width:${Math.min(util,1)*100}%;background:${utilColor}"></div></div>
-      <div class="cc-meta">
-        <div class="cc-meta-item"><div class="lbl">Limit</div><div class="val">${fmt(c.limit)}</div></div>
-        <div class="cc-meta-item"><div class="lbl">Utilization</div><div class="val" style="color:${utilColor}">${(util*100).toFixed(0)}%</div></div>
-        <div class="cc-meta-item"><div class="lbl">Due Date</div><div class="val">${c.due}</div></div>
-        <div class="cc-meta-item"><div class="lbl">Mo. Interest</div><div class="val" style="color:${c.balance > 0 ? 'var(--red)' : 'var(--green)'}">$${monthlyInt}</div></div>
-      </div>
-      <div style="padding:0 16px 14px;display:flex;gap:8px">
-        <button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center" onclick="openCCTransaction('${id}','charge')">+ Add Charge</button>
-        <button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center;color:var(--green);border-color:var(--green)" onclick="openCCTransaction('${id}','payment')">− Log Payment</button>
-      </div>
-      <div style="border-top:1px solid var(--border)">
-        <div style="padding:10px 16px 4px;font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted)">Recent Transactions</div>
-        ${txnsHtml}
-      </div>`;
-    container.appendChild(div);
-  });
-}
-
-// ═══════════════════════════════════════
-// PAYCHECKS
-// ═══════════════════════════════════════
-
-function renderPaychecks() {
-  const t         = today();
-  const container = $('paycheck-list');
-  container.innerHTML = '';
-
-  const grouped = {};
-  state.paychecks.forEach(p => {
-    const m = getMonthName(p.date);
-    if (!grouped[m]) grouped[m] = [];
-    grouped[m].push(p);
-  });
-
-  const nextPc = getNextPaycheck();
-
-  Object.entries(grouped).forEach(([month, checks]) => {
-    const group = document.createElement('div');
-    group.className = 'month-group';
-    group.innerHTML = `<div class="month-label">${month}</div>`;
-
-    checks.forEach(p => {
-      const isPast    = p.date < t;
-      const isNext    = nextPc && nextPc.date === p.date;
-      const badgeCls  = p.source === 'JCFS' ? 'badge-jcfs' : 'badge-arcus';
-      const idx       = state.paychecks.indexOf(p);
-
-      const row = document.createElement('div');
-      row.className = 'paycheck-row' + (isPast ? ' past' : '') + (isNext ? ' next' : '');
-      row.innerHTML = `
-        <div>
-          <div class="paycheck-date">${formatDateLong(p.date)}</div>
-          <div class="paycheck-who">${p.who}</div>
-        </div>
-        <div class="paycheck-badge ${badgeCls}">${p.source}</div>
-        ${p.received
-          ? `<button class="mark-btn" style="color:var(--green);border-color:var(--green)" onclick="unmarkReceived(${idx})">✓ Received</button>`
-          : `<button class="mark-btn" onclick="markReceived(${idx})">Mark received</button>`}`;
-      group.appendChild(row);
-    });
-
-    container.appendChild(group);
-  });
+function updateCategoryDropdown() { const aid=$('exp-account').value,sel=$('exp-category'); sel.innerHTML=''; if(!aid){sel.innerHTML='<option value="">Select account first…</option>';return;} (state.categories[aid]||[]).forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o);}); }
+function saveExpense() {
+  const accId=$('exp-account').value,catId=$('exp-category').value,amount=parseFloat($('exp-amount').value),desc=$('exp-desc').value.trim(),date=$('exp-date').value;
+  if(!accId||!catId||isNaN(amount)||amount<=0){showToast('Please fill all required fields');return;}
+  if(!state.expenses)state.expenses=[];
+  state.expenses.push({id:Date.now().toString(),accountId:accId,categoryId:catId,amount,description:desc,date});
+  saveState(); closeModal('modal-expense'); showToast('Expense saved ✓'); renderExpenses();
 }
 
 function markReceived(idx) {
-  const p = state.paychecks[idx];
-  // Build breakdown rows HTML
-  const rows = Object.entries(state.accounts)
-    .filter(([id, a]) => a.alloc > 0)
-    .map(([id, a]) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="width:8px;height:8px;border-radius:50%;background:${a.color}"></div>
-          <span style="font-size:14px">${a.name}</span>
-        </div>
-        <span style="font-size:14px;font-weight:600;color:var(--green)">+$${a.alloc.toFixed(2)}</span>
-      </div>`).join('');
-  const total = Object.values(state.accounts).filter(a => a.alloc > 0).reduce((s,a) => s + a.alloc, 0);
-  $('paycheck-confirm-who').textContent = p.who + ' · ' + p.source;
-  $('paycheck-confirm-date').textContent = formatDateLong(p.date);
-  $('paycheck-confirm-rows').innerHTML = rows;
-  $('paycheck-confirm-total').textContent = '$' + total.toFixed(2);
-  $('paycheck-confirm-btn').onclick = () => confirmMarkReceived(idx);
+  const p=state.paychecks[idx];
+  const rows=Object.entries(state.accounts).filter(([id,a])=>a.alloc>0).map(([id,a])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:${a.color}"></div><span style="font-size:14px">${a.name}</span></div><span style="font-size:14px;font-weight:600;color:var(--green)">+$${a.alloc.toFixed(2)}</span></div>`).join('');
+  const total=Object.values(state.accounts).filter(a=>a.alloc>0).reduce((s,a)=>s+a.alloc,0);
+  $('paycheck-confirm-who').textContent=p.who+' · '+p.source;
+  $('paycheck-confirm-date').textContent=formatDateLong(p.date);
+  $('paycheck-confirm-rows').innerHTML=rows;
+  $('paycheck-confirm-total').textContent='$'+total.toFixed(2);
+  $('paycheck-confirm-btn').onclick=()=>confirmMarkReceived(idx);
   $('modal-paycheck').classList.add('open');
 }
-
 function confirmMarkReceived(idx) {
-  state.paychecks[idx].received = true;
-  Object.entries(state.accounts).forEach(([id, a]) => {
-    if (a.alloc > 0) a.balance = Math.round((a.balance + a.alloc) * 100) / 100;
-  });
-  saveState();
-  closeModal('modal-paycheck');
-  renderPaychecks();
-  renderOverview();
-  showToast('Paycheck received — balances updated ✓');
+  state.paychecks[idx].received=true;
+  Object.entries(state.accounts).forEach(([id,a])=>{ if(a.alloc>0) a.balance=Math.round((a.balance+a.alloc)*100)/100; });
+  saveState(); closeModal('modal-paycheck'); renderPaychecks(); renderOverview(); showToast('Paycheck received — balances updated ✓');
 }
-
 function unmarkReceived(idx) {
-  state.paychecks[idx].received = false;
-  Object.entries(state.accounts).forEach(([id, a]) => {
-    if (a.alloc > 0) a.balance = Math.round((a.balance - a.alloc) * 100) / 100;
-  });
-  saveState();
-  renderPaychecks();
-  renderOverview();
-  showToast('Paycheck unmarked — balances reduced');
-}
-
-// ═══════════════════════════════════════
-// EXPENSES
-// ═══════════════════════════════════════
-
-let expTab = 'category';
-
-function switchExpTab(tab) {
-  expTab = tab;
-  document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', (i === 0 && tab === 'category') || (i === 1 && tab === 'account'));
-  });
-  renderExpenses();
-}
-
-function renderExpenses() {
-  const { year, month } = getCurrentMonth();
-  const monthLabel = new Date(year, month-1).toLocaleDateString('en-US', {month:'long', year:'numeric'});
-  $('expenses-subtitle').textContent = monthLabel;
-
-  const ym        = `${year}-${String(month).padStart(2,'0')}`;
-  const container = $('expenses-content');
-  container.innerHTML = '';
-
-  if (expTab === 'category') {
-    Object.entries(state.accounts).forEach(([accId, acc]) => {
-      const cats = state.categories[accId] || [];
-      cats.forEach(cat => {
-        const spent     = getSpentInMonth(accId, cat.id, year, month);
-        const pct       = Math.min(spent / cat.budget, 1);
-        const remaining = cat.budget - spent;
-        const txns      = state.expenses.filter(e => e.accountId === accId && e.categoryId === cat.id && e.date.slice(0,7) === ym);
-
-        const card = document.createElement('div');
-        card.className = 'exp-cat-card';
-
-        const txnsHtml = txns.length
-          ? txns.map(t => `
-              <div class="txn-row">
-                <div class="txn-date">${formatDate(t.date)}</div>
-                <div class="txn-loc">${t.description || '—'}</div>
-                <div class="txn-amt ${t.amount < 0 ? 'negative' : ''}">${t.amount < 0 ? '+' : '-'}${fmt(Math.abs(t.amount))}</div>
-              </div>`).join('')
-          : '<div style="padding:12px 16px;font-size:13px;color:var(--text-muted)">No transactions this month</div>';
-
-        card.innerHTML = `
-          <div class="exp-cat-header" onclick="this.parentElement.classList.toggle('open')">
-            <div class="acct-dot" style="background:${acc.color}"></div>
-            <div style="flex:1">
-              <div class="exp-cat-name">${cat.name}</div>
-              <div style="font-size:12px;color:var(--text-muted)">${acc.name}</div>
-            </div>
-            <div style="text-align:right">
-              <div style="font-size:13px;font-weight:600;color:${remaining < 0 ? 'var(--red)' : 'var(--text)'}">${fmt(spent)}<span style="color:var(--text-muted);font-weight:400"> / ${fmt(cat.budget)}</span></div>
-            </div>
-            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
-          <div class="exp-cat-body">
-            <div class="cat-row" style="border-bottom:1px solid var(--border)">
-              <div class="progress-track"><div class="progress-fill" style="width:${pct*100}%;background:${progressColor(pct)}"></div></div>
-              <div class="cat-remaining" style="color:${remaining < 0 ? 'var(--red)' : remaining < cat.budget * 0.2 ? 'var(--accent)' : 'var(--green)'}">
-                ${remaining >= 0 ? fmt(remaining) + ' remaining' : fmt(Math.abs(remaining)) + ' over budget'}
-              </div>
-            </div>
-            ${txnsHtml}
-          </div>`;
-        container.appendChild(card);
-      });
-    });
-  } else {
-    Object.entries(state.accounts).forEach(([accId, acc]) => {
-      const txns = state.expenses.filter(e => e.accountId === accId && e.date.slice(0,7) === ym);
-      if (!txns.length) return;
-      const total = txns.reduce((s,t) => s + Math.max(t.amount, 0), 0);
-
-      const card = document.createElement('div');
-      card.className = 'exp-cat-card open';
-      card.innerHTML = `
-        <div class="exp-cat-header" onclick="this.parentElement.classList.toggle('open')">
-          <div class="acct-dot" style="background:${acc.color}"></div>
-          <div class="exp-cat-name">${acc.name}</div>
-          <div style="font-size:15px;font-weight:600">${fmt(total)}</div>
-          <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="exp-cat-body">
-          ${txns.map(t => `
-            <div class="txn-row">
-              <div class="txn-date">${formatDate(t.date)}</div>
-              <div class="txn-loc">${t.description || t.categoryId}</div>
-              <div class="txn-amt">${fmt(t.amount)}</div>
-            </div>`).join('')}
-        </div>`;
-      container.appendChild(card);
-    });
-    if (!container.children.length) {
-      container.innerHTML = '<div class="empty"><div style="font-size:40px">📭</div><p>No expenses logged yet this month</p></div>';
-    }
-  }
-}
-
-// ═══════════════════════════════════════
-// ADD EXPENSE
-// ═══════════════════════════════════════
-
-function openAddExpense() {
-  const sel = $('exp-account');
-  sel.innerHTML = '<option value="">Select account…</option>';
-  Object.entries(state.accounts).forEach(([id, a]) => {
-    const cats = state.categories[id];
-    if (cats && cats.length) {
-      const opt = document.createElement('option');
-      opt.value = id;
-      opt.textContent = a.name;
-      sel.appendChild(opt);
-    }
-  });
-  $('exp-date').value     = today();
-  $('exp-amount').value   = '';
-  $('exp-desc').value     = '';
-  $('exp-category').innerHTML = '<option value="">Select account first…</option>';
-  $('modal-expense').classList.add('open');
-}
-
-function updateCategoryDropdown() {
-  const accId = $('exp-account').value;
-  const sel   = $('exp-category');
-  sel.innerHTML = '';
-  if (!accId) { sel.innerHTML = '<option value="">Select account first…</option>'; return; }
-  (state.categories[accId] || []).forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c.id;
-    opt.textContent = c.name;
-    sel.appendChild(opt);
-  });
-}
-
-function saveExpense() {
-  const accId  = $('exp-account').value;
-  const catId  = $('exp-category').value;
-  const amount = parseFloat($('exp-amount').value);
-  const desc   = $('exp-desc').value.trim();
-  const date   = $('exp-date').value;
-
-  if (!accId || !catId || isNaN(amount) || amount <= 0) {
-    showToast('Please fill all required fields');
-    return;
-  }
-  state.expenses.push({ id: Date.now().toString(), accountId: accId, categoryId: catId, amount, description: desc, date });
-  saveState();
-  closeModal('modal-expense');
-  showToast('Expense saved ✓');
-  renderExpenses();
-}
-
-// ═══════════════════════════════════════
-// EDIT BALANCES
-// ═══════════════════════════════════════
-
-let editingAccountId = null;
-
-function openEditBalance(id) {
-  editingAccountId = id;
-  $('balance-modal-title').textContent = 'Edit ' + state.accounts[id].name;
-  $('balance-input').value = state.accounts[id].balance;
-  $('modal-balance').classList.add('open');
-}
-
-function saveBalance() {
-  const val = parseFloat($('balance-input').value);
-  if (isNaN(val)) return;
-  state.accounts[editingAccountId].balance = val;
-  saveState();
-  closeModal('modal-balance');
-  showToast('Balance updated ✓');
-  renderOverview();
-}
-
-let editingCCId  = null;
-let ccTxnType    = 'charge'; // 'charge' | 'payment'
-
-function setCCType(type) {
-  ccTxnType = type;
-  $('cc-type-charge').classList.toggle('active',  type === 'charge');
-  $('cc-type-payment').classList.toggle('active', type === 'payment');
-  updateCCPreview();
-}
-
-function updateCCPreview() {
-  const c       = state.creditCards[editingCCId];
-  const amount  = parseFloat($('cc-payment-input').value) || 0;
-  const newBal  = ccTxnType === 'payment'
-    ? Math.max(c.balance - amount, 0)
-    : c.balance + amount;
-  $('cc-new-bal-preview').textContent = fmt(newBal);
-  $('cc-new-bal-preview').style.color = newBal < c.balance ? 'var(--green)' : newBal > c.balance ? 'var(--red)' : 'var(--text)';
-}
-
-function openCCTransaction(id, type) {
-  editingCCId = id;
-  const c = state.creditCards[id];
-  $('cc-balance-title').textContent = c.name;
-  $('cc-current-bal').textContent   = fmt(c.balance);
-  $('cc-payment-input').value       = '';
-  $('cc-txn-desc').value            = '';
-  $('cc-txn-date').value            = today();
-  $('cc-new-bal-preview').textContent = fmt(c.balance);
-  $('cc-new-bal-preview').style.color = 'var(--text)';
-  setCCType(type);
-  $('cc-payment-input').oninput = updateCCPreview;
-  $('modal-cc-balance').classList.add('open');
-}
-
-// keep old name working from overview Edit buttons
-function openEditCCBalance(id) { openCCTransaction(id, 'payment'); }
-
-function saveCCTransaction() {
-  const amount = parseFloat($('cc-payment-input').value);
-  if (isNaN(amount) || amount <= 0) { showToast('Enter an amount'); return; }
-  const c    = state.creditCards[editingCCId];
-  const desc = $('cc-txn-desc').value.trim();
-  const date = $('cc-txn-date').value;
-
-  // Update balance
-  if (ccTxnType === 'payment') {
-    c.balance = Math.round(Math.max(c.balance - amount, 0) * 100) / 100;
-  } else {
-    c.balance = Math.round((c.balance + amount) * 100) / 100;
-  }
-
-  // Record transaction
-  if (!state.ccTransactions) state.ccTransactions = [];
-  state.ccTransactions.push({
-    id:          Date.now().toString(),
-    cardId:      editingCCId,
-    type:        ccTxnType,
-    amount,
-    description: desc,
-    date,
-  });
-
-  saveState();
-  closeModal('modal-cc-balance');
-  showToast(ccTxnType === 'payment' ? `Payment of ${fmt(amount)} logged ✓` : `Charge of ${fmt(amount)} added ✓`);
-  renderOverview();
-  renderCards();
+  state.paychecks[idx].received=false;
+  Object.entries(state.accounts).forEach(([id,a])=>{ if(a.alloc>0) a.balance=Math.round((a.balance-a.alloc)*100)/100; });
+  saveState(); renderPaychecks(); renderOverview(); showToast('Paycheck unmarked — balances reduced');
 }
 
 function closeModal(id) { $(id).classList.remove('open'); }
-
-document.querySelectorAll('.modal-bg').forEach(bg => {
-  bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
-});
-
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
-
-loadState();
-renderOverview();
+document.querySelectorAll('.modal-bg').forEach(bg => bg.addEventListener('click', e => { if(e.target===bg) bg.classList.remove('open'); }));
 </script>
 </body>
 </html>
