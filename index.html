@@ -429,6 +429,12 @@ const DEFAULT_STATE = {
 let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
 let isSaving = false;
 
+const ACCOUNT_ORDER = ['bmo', 'co_check', 'co_save', 'boa', 'chase', 'amex_save'];
+
+function orderedAccounts() {
+  return ACCOUNT_ORDER.map(id => [id, state.accounts[id]]).filter(([id, a]) => a);
+}
+
 const $ = id => document.getElementById(id);
 const fmt = n => '$' + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 const today = () => new Date().toISOString().slice(0,10);
@@ -535,30 +541,44 @@ function getSpentInMonth(accountId, categoryId, year, month) {
 
 function renderAllocBar(barId, legendId) {
   const bar = $(barId), legend = $(legendId); bar.innerHTML = ''; legend.innerHTML = '';
-  Object.entries(state.accounts).forEach(([id, a]) => {
+  orderedAccounts().forEach(([id, a]) => {
     if (!a.alloc) return;
     const seg = document.createElement('div'); seg.className = 'alloc-seg'; seg.style.cssText = `background:${a.color};flex:${a.alloc}`; bar.appendChild(seg);
     const dot = document.createElement('div'); dot.className = 'alloc-dot'; dot.innerHTML = `<span style="background:${a.color}"></span>${a.name.split(' ')[0]} $${a.alloc}`; legend.appendChild(dot);
   });
 }
 
+// Returns the balance shown in Accounts tab — sum of envelopes if categories exist, else raw balance
+function getAccountDisplayBalance(accId) {
+  const cats = state.categories[accId] || [];
+  if (cats.length) return cats.reduce((s, cat) => s + (cat.balance || 0), 0);
+  return state.accounts[accId].balance;
+}
+
 function renderOverview() {
   $('overview-date').textContent = new Date().toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
   const next = getNextPaycheck();
   $('next-paycheck-banner').innerHTML = next ? `<div class="next-banner"><div class="next-banner-label">Next Paycheck</div><div class="next-banner-date">${formatDateLong(next.date)}</div><div class="next-banner-who">${next.who} · ${next.source}</div></div>` : '';
+
+  // Use AMEX savings raw balance for true savings (no envelope categories)
   const ccDebt = Object.values(state.creditCards).filter(c=>!c.isLoan).reduce((s,c)=>s+c.balance,0);
   const loanDebt = Object.values(state.creditCards).filter(c=>c.isLoan).reduce((s,c)=>s+c.balance,0);
-  $('total-savings').textContent = fmt(state.accounts.amex_save.balance);
+  $('total-savings').textContent = fmt(getAccountDisplayBalance('amex_save'));
   $('total-cc').textContent = fmt(ccDebt);
-  // Update loan stat if element exists
   if ($('total-loan')) $('total-loan').textContent = fmt(loanDebt);
+
   renderAllocBar('alloc-bar', 'alloc-legend');
+
+  // Bank accounts — use same balance logic as Accounts tab
   const bl = $('bank-list'); bl.innerHTML = '';
-  Object.entries(state.accounts).forEach(([id, a]) => {
+  orderedAccounts().forEach(([id, a]) => {
+    const displayBal = getAccountDisplayBalance(id);
     const r = document.createElement('div'); r.className = 'acct-row';
-    r.innerHTML = `<div class="acct-dot" style="background:${a.color}"></div><div class="acct-name">${a.name}</div><div class="acct-bal" style="color:var(--text)">${fmt(a.balance)}</div>`;
+    r.innerHTML = `<div class="acct-dot" style="background:${a.color}"></div><div class="acct-name">${a.name}</div><div class="acct-bal" style="color:var(--text)">${fmt(displayBal)}</div>`;
     bl.appendChild(r);
   });
+
+  // Credit cards and loans — pull directly from creditCards balance (same as Cards tab)
   const cl = $('cc-list-overview'); cl.innerHTML = '';
   const sortedCards = Object.entries(state.creditCards).sort(([,a],[,b]) => {
     if (a.isLoan && !b.isLoan) return 1;
@@ -579,9 +599,12 @@ function renderOverview() {
 function renderAccounts() {
   renderAllocBar('alloc-bar-2', 'alloc-legend-2');
   const container = $('account-cards'); container.innerHTML = '';
-  Object.entries(state.accounts).forEach(([accId, a]) => {
+  orderedAccounts().forEach(([accId, a]) => {
     const cats = state.categories[accId] || [];
-    const card = document.createElement('div'); card.className = 'acct-card'; card.id = 'acct-card-' + accId;
+    // Sum envelope balances for accounts that have categories
+    const envelopeTotal = cats.length
+      ? cats.reduce((s, cat) => s + (cat.balance || 0), 0)
+      : a.balance;
 
     let catsHtml = '';
     cats.forEach(cat => {
@@ -604,11 +627,12 @@ function renderAccounts() {
         </div>`;
     });
 
+    const card = document.createElement('div'); card.className = 'acct-card'; card.id = 'acct-card-' + accId;
     card.innerHTML = `
       <div class="acct-card-header" onclick="toggleCard('acct-card-${accId}')">
         <div class="acct-dot" style="background:${a.color}"></div>
         <div><div class="acct-card-name">${a.name}</div><div class="acct-card-alloc">$${a.alloc}/paycheck</div></div>
-        <div class="acct-card-bal" style="color:var(--text)">${fmt(a.balance)}</div>
+        <div class="acct-card-bal" style="color:var(--text)">${fmt(envelopeTotal)}</div>
         <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="acct-card-body">
@@ -746,7 +770,7 @@ function renderExpenses() {
   const ym = `${year}-${String(month).padStart(2,'0')}`, container = $('expenses-content'); container.innerHTML = '';
 
   if (expTab === 'category') {
-    Object.entries(state.accounts).forEach(([accId, acc]) => {
+    orderedAccounts().forEach(([accId, acc]) => {
       (state.categories[accId]||[]).forEach(cat => {
         const bal = cat.balance || 0;
         const balColor = bal <= 0 ? 'var(--red)' : bal < cat.budget * 0.25 ? 'var(--accent)' : 'var(--green)';
@@ -758,6 +782,7 @@ function renderExpenses() {
                 <div class="txn-date">${formatDate(t.date)}</div>
                 <div class="txn-loc">${t.description||'—'}</div>
                 <div class="txn-amt" style="color:var(--red)">-${fmt(t.amount)}</div>
+                <div class="acct-edit" style="font-size:11px;padding:2px 8px;color:var(--red);border-color:var(--red)" onclick="deleteExpense('${t.id}','${accId}','${cat.id}',${t.amount})">✕</div>
               </div>`).join('')
           : '<div style="padding:12px 16px;font-size:13px;color:var(--text-muted)">No transactions this month</div>';
 
@@ -790,7 +815,7 @@ function renderExpenses() {
       });
     });
   } else {
-    Object.entries(state.accounts).forEach(([accId, acc]) => {
+    orderedAccounts().forEach(([accId, acc]) => {
       const txns = (state.expenses||[]).filter(e=>e.accountId===accId&&e.date.slice(0,7)===ym);
       if (!txns.length) return;
       const total = txns.reduce((s,t)=>s+t.amount,0);
@@ -917,6 +942,19 @@ function saveDirectCCBalance() {
   showToast('Balance updated ✓');
   renderCards();
   renderOverview();
+}
+
+function deleteExpense(id, accId, catId, amount) {
+  if (!confirm('Remove this transaction?')) return;
+  // Remove from expenses array
+  state.expenses = (state.expenses || []).filter(e => e.id !== id);
+  // Add the amount back to the envelope balance
+  const cat = getCatRef(accId, catId);
+  if (cat) cat.balance = Math.round(((cat.balance || 0) + amount) * 100) / 100;
+  saveState();
+  showToast('Transaction removed ✓');
+  renderExpenses();
+  renderAccounts();
 }
 
 function closeModal(id) { $(id).classList.remove('open'); }
