@@ -293,6 +293,25 @@
     </div>
   </div>
 
+  <!-- MODAL: Edit Envelope Balance -->
+  <div class="modal-bg" id="modal-envelope">
+    <div class="modal">
+      <div class="modal-title" id="env-modal-title">Edit Envelope</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">+<span id="env-per-paycheck"></span>/paycheck · Target: <span id="env-target"></span>/month</div>
+      <div class="form-group" style="margin-top:12px">
+        <div class="form-label">Current Balance</div>
+        <input class="form-input" type="number" id="env-balance-input" step="0.01" placeholder="0.00">
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:13px;color:var(--text-muted);margin-bottom:4px">
+        This sets the actual saved amount in this envelope right now.
+      </div>
+      <div class="form-actions">
+        <button class="btn-secondary" onclick="closeModal('modal-envelope')">Cancel</button>
+        <button class="btn-primary" onclick="saveEnvelopeBalance()">Save</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 </div>
 
@@ -346,29 +365,29 @@ const DEFAULT_STATE = {
     kay:           { name: 'Kay Jewelers',   balance: 0,        limit: 8500,  apr: 35.99, due: '12th', color: '#c0403a' },
   },
   categories: {
-    bmo:      [{ id:'groceries', name:'Groceries', budget:400, perPaycheck:100 }],
+    bmo:      [{ id:'groceries', name:'Groceries', budget:400, perPaycheck:100, balance:0 }],
     co_check: [
-      { id:'phone_bill', name:'Phone Bill', budget:132, perPaycheck:33 },
-      { id:'gas_util', name:'Gas (Utility)', budget:100, perPaycheck:25 },
-      { id:'electricity', name:'Electricity', budget:100, perPaycheck:25 },
-      { id:'internet', name:'Internet', budget:50, perPaycheck:13 },
-      { id:'car_gas', name:'Car Gas', budget:100, perPaycheck:25 },
+      { id:'phone_bill', name:'Phone Bill', budget:132, perPaycheck:33, balance:0 },
+      { id:'gas_util', name:'Gas (Utility)', budget:100, perPaycheck:25, balance:0 },
+      { id:'electricity', name:'Electricity', budget:100, perPaycheck:25, balance:0 },
+      { id:'internet', name:'Internet', budget:50, perPaycheck:13, balance:0 },
+      { id:'car_gas', name:'Car Gas', budget:100, perPaycheck:25, balance:0 },
     ],
     co_save: [
-      { id:'dog_food', name:'Dog Food', budget:50, perPaycheck:5 },
-      { id:'dog_bath', name:'Dog Bath', budget:120, perPaycheck:30 },
-      { id:'sunny_pills', name:'Sunny Pills', budget:36, perPaycheck:4.5 },
-      { id:'gym', name:'Gym Membership', budget:140, perPaycheck:35 },
-      { id:'costco_mem', name:'Costco Membership', budget:60, perPaycheck:2 },
-      { id:'sunny_vet', name:'Sunny Vet', budget:42, perPaycheck:10.5 },
+      { id:'dog_food', name:'Dog Food', budget:50, perPaycheck:5, balance:0 },
+      { id:'dog_bath', name:'Dog Bath', budget:120, perPaycheck:30, balance:0 },
+      { id:'sunny_pills', name:'Sunny Pills', budget:36, perPaycheck:4.5, balance:0 },
+      { id:'gym', name:'Gym Membership', budget:140, perPaycheck:35, balance:0 },
+      { id:'costco_mem', name:'Costco Membership', budget:60, perPaycheck:2, balance:0 },
+      { id:'sunny_vet', name:'Sunny Vet', budget:42, perPaycheck:10.5, balance:0 },
     ],
     boa: [
-      { id:'car_ins', name:'Car Insurance', budget:146, perPaycheck:37 },
-      { id:'city_stick', name:'City Sticker', budget:8.5, perPaycheck:2.25 },
-      { id:'reg', name:'Registration', budget:16.66, perPaycheck:4.5 },
-      { id:'jewelry_ins', name:'Jewelry Insurance', budget:13, perPaycheck:3.25 },
+      { id:'car_ins', name:'Car Insurance', budget:146, perPaycheck:37, balance:0 },
+      { id:'city_stick', name:'City Sticker', budget:8.5, perPaycheck:2.25, balance:0 },
+      { id:'reg', name:'Registration', budget:16.66, perPaycheck:4.5, balance:0 },
+      { id:'jewelry_ins', name:'Jewelry Insurance', budget:13, perPaycheck:3.25, balance:0 },
     ],
-    chase:     [{ id:'rent', name:'Rent', budget:1500, perPaycheck:375 }],
+    chase:     [{ id:'rent', name:'Rent', budget:1500, perPaycheck:375, balance:0 }],
     amex_save: [],
   },
   paychecks: [
@@ -530,20 +549,78 @@ function renderOverview() {
 
 function renderAccounts() {
   renderAllocBar('alloc-bar-2', 'alloc-legend-2');
-  const {year, month} = getCurrentMonth(); const container = $('account-cards'); container.innerHTML = '';
-  Object.entries(state.accounts).forEach(([id, a]) => {
-    const cats = state.categories[id] || []; const card = document.createElement('div'); card.className = 'acct-card'; card.id = 'acct-card-' + id;
+  const container = $('account-cards'); container.innerHTML = '';
+  Object.entries(state.accounts).forEach(([accId, a]) => {
+    const cats = state.categories[accId] || [];
+    const card = document.createElement('div'); card.className = 'acct-card'; card.id = 'acct-card-' + accId;
     let catsHtml = '';
     cats.forEach(cat => {
-      const spent = getSpentInMonth(id, cat.id, year, month), pct = Math.min(spent/cat.budget,1), remaining = cat.budget - spent;
-      catsHtml += `<div class="cat-row"><div class="cat-top"><div class="cat-name">${cat.name}</div><div class="cat-nums">${fmt(spent)} / ${fmt(cat.budget)}</div></div><div class="progress-track"><div class="progress-fill" style="width:${pct*100}%;background:${progressColor(pct)}"></div></div><div class="cat-remaining" style="color:${remaining<0?'var(--red)':remaining<cat.budget*.2?'var(--accent)':'var(--green)'}">${remaining>=0?fmt(remaining)+' left':fmt(Math.abs(remaining))+' over'}</div></div>`;
+      const bal = cat.balance || 0;
+      const pct = Math.min(bal / cat.budget, 1);
+      const balColor = bal <= 0 ? 'var(--red)' : bal < cat.budget * 0.25 ? 'var(--accent)' : 'var(--green)';
+      catsHtml += `
+        <div class="cat-row">
+          <div class="cat-top">
+            <div class="cat-name">${cat.name}</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="cat-nums">+$${cat.perPaycheck}/paycheck</div>
+              <div class="acct-edit" style="font-size:11px;padding:2px 8px" onclick="openEnvelopeEdit('${accId}','${cat.id}')">Edit</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:6px">
+            <div style="font-size:22px;font-weight:700;font-family:'DM Serif Display',serif;color:${balColor}">${fmt(bal)}</div>
+            <div style="font-size:12px;color:var(--text-muted)">saved</div>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:${pct*100}%;background:${balColor}"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Target: ${fmt(cat.budget)}</div>
+        </div>`;
     });
-    card.innerHTML = `<div class="acct-card-header" onclick="toggleCard('acct-card-${id}')"><div class="acct-dot" style="background:${a.color}"></div><div><div class="acct-card-name">${a.name}</div><div class="acct-card-alloc">$${a.alloc}/paycheck</div></div><div class="acct-card-bal" style="color:var(--text)">${fmt(a.balance)}</div><svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="acct-card-body">${cats.length?catsHtml:'<div style="padding:16px;color:var(--text-muted);font-size:13px">General savings account</div>'}</div>`;
+    card.innerHTML = `
+      <div class="acct-card-header" onclick="toggleCard('acct-card-${accId}')">
+        <div class="acct-dot" style="background:${a.color}"></div>
+        <div><div class="acct-card-name">${a.name}</div><div class="acct-card-alloc">$${a.alloc}/paycheck</div></div>
+        <div class="acct-card-bal" style="color:var(--text)">${fmt(a.balance)}</div>
+        <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="acct-card-body">
+        ${cats.length ? catsHtml : '<div style="padding:16px;color:var(--text-muted);font-size:13px">General savings account</div>'}
+      </div>`;
     container.appendChild(card);
   });
 }
 
-function toggleCard(id) { $(id).classList.toggle('open'); }
+// ── ENVELOPE EDIT ────────────────────────────────────────
+
+let envAccId = null, envCatId = null;
+
+function openEnvelopeEdit(accId, catId) {
+  envAccId = accId; envCatId = catId;
+  const cat = state.categories[accId].find(c => c.id === catId);
+  $('env-modal-title').textContent = cat.name;
+  $('env-per-paycheck').textContent = '$' + cat.perPaycheck;
+  $('env-target').textContent = fmt(cat.budget);
+  $('env-balance-input').value = cat.balance || 0;
+  $('modal-envelope').classList.add('open');
+}
+
+function saveEnvelopeBalance() {
+  const val = parseFloat($('env-balance-input').value);
+  if (isNaN(val)) return;
+  const cat = state.categories[envAccId].find(c => c.id === envCatId);
+  cat.balance = Math.round(val * 100) / 100;
+  saveState();
+  closeModal('modal-envelope');
+  showToast('Envelope balance updated ✓');
+  renderAccounts();
+}
+
+function getCatRef(accId, catId) {
+  return (state.categories[accId] || []).find(c => c.id === catId);
+}
+
+
 
 function renderCards() {
   $('cards-subtitle').textContent = 'Total: ' + fmt(Object.values(state.creditCards).reduce((s,c)=>s+c.balance,0));
@@ -658,6 +735,9 @@ function saveExpense() {
   if(!accId||!catId||isNaN(amount)||amount<=0){showToast('Please fill all required fields');return;}
   if(!state.expenses)state.expenses=[];
   state.expenses.push({id:Date.now().toString(),accountId:accId,categoryId:catId,amount,description:desc,date});
+  // Subtract from envelope balance
+  const cat = getCatRef(accId, catId);
+  if (cat) cat.balance = Math.round(((cat.balance || 0) - amount) * 100) / 100;
   saveState(); closeModal('modal-expense'); showToast('Expense saved ✓'); renderExpenses();
 }
 
@@ -675,11 +755,23 @@ function markReceived(idx) {
 function confirmMarkReceived(idx) {
   state.paychecks[idx].received=true;
   Object.entries(state.accounts).forEach(([id,a])=>{ if(a.alloc>0) a.balance=Math.round((a.balance+a.alloc)*100)/100; });
+  // Also add perPaycheck amount to each envelope balance
+  Object.entries(state.categories).forEach(([accId, cats]) => {
+    cats.forEach(cat => {
+      cat.balance = Math.round(((cat.balance || 0) + cat.perPaycheck) * 100) / 100;
+    });
+  });
   saveState(); closeModal('modal-paycheck'); renderPaychecks(); renderOverview(); showToast('Paycheck received — balances updated ✓');
 }
 function unmarkReceived(idx) {
   state.paychecks[idx].received=false;
   Object.entries(state.accounts).forEach(([id,a])=>{ if(a.alloc>0) a.balance=Math.round((a.balance-a.alloc)*100)/100; });
+  // Reverse the perPaycheck additions
+  Object.entries(state.categories).forEach(([accId, cats]) => {
+    cats.forEach(cat => {
+      cat.balance = Math.round(((cat.balance || 0) - cat.perPaycheck) * 100) / 100;
+    });
+  });
   saveState(); renderPaychecks(); renderOverview(); showToast('Paycheck unmarked — balances reduced');
 }
 
