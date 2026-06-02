@@ -376,8 +376,10 @@ const DEFAULT_STATE = {
     chase_freedom: { name: 'Chase Freedom',  balance: 8394.08,  limit: 8300,  apr: 27.24, due: '2nd',  color: '#3a7eb5' },
     venture_one:   { name: 'Venture One',    balance: 3680.23,  limit: 4101,  apr: 28.24, due: '2nd',  color: '#7040b8' },
     apple:         { name: 'Apple Card',     balance: 16485.64, limit: 16500, apr: 26.24, due: '31st', color: '#555555' },
+    discover:      { name: 'Discover',       balance: 3114.14,  limit: 16000, apr: 21.49, due: '13th', color: '#e07830' },
     amex:          { name: 'Amex',           balance: 0,        limit: 1000,  apr: 28.24, due: '18th', color: '#9a7a42' },
     kay:           { name: 'Kay Jewelers',   balance: 0,        limit: 8500,  apr: 35.99, due: '12th', color: '#c0403a' },
+    edfinancial:   { name: 'EDfinancial Loan', balance: 122919.89, limit: null, apr: null, due: null, color: '#5a8a6a', isLoan: true },
   },
   categories: {
     bmo:      [{ id:'groceries', name:'Groceries', budget:400, perPaycheck:100, balance:0 }],
@@ -639,12 +641,57 @@ function renderCards() {
   $('cards-subtitle').textContent = 'Total: ' + fmt(Object.values(state.creditCards).reduce((s,c)=>s+c.balance,0));
   const container = $('cc-cards'); container.innerHTML = '';
   Object.entries(state.creditCards).forEach(([id, c]) => {
-    const util = c.balance/c.limit, uc = util>.9?'var(--red)':util>.7?'var(--accent)':'var(--green)';
-    const mi = c.balance>0?(c.balance*(c.apr/100)/12).toFixed(2):'0.00';
-    const txns = (state.ccTransactions||[]).filter(t=>t.cardId===id).slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
-    const txHtml = txns.length ? txns.map(t=>`<div class="txn-row"><div class="txn-date">${formatDate(t.date)}</div><div class="txn-loc">${t.description||(t.type==='payment'?'Payment':'Charge')}</div><div class="txn-amt" style="color:${t.type==='payment'?'var(--green)':'var(--red)'}">${t.type==='payment'?'−':'+'}${fmt(t.amount)}</div></div>`).join('') : '<div style="padding:12px 16px;font-size:13px;color:var(--text-muted)">No transactions logged yet</div>';
     const div = document.createElement('div'); div.className = 'cc-card';
-    div.innerHTML = `<div class="cc-header"><div><div class="cc-name">${c.name}</div><div class="cc-balance">${fmt(c.balance)}</div></div><div class="cc-apr">${c.apr.toFixed(2)}% APR</div></div><div class="cc-util-bar"><div class="cc-util-fill" style="width:${Math.min(util,1)*100}%;background:${uc}"></div></div><div class="cc-meta"><div class="cc-meta-item"><div class="lbl">Limit</div><div class="val">${fmt(c.limit)}</div></div><div class="cc-meta-item"><div class="lbl">Utilization</div><div class="val" style="color:${uc}">${(util*100).toFixed(0)}%</div></div><div class="cc-meta-item"><div class="lbl">Due Date</div><div class="val">${c.due}</div></div><div class="cc-meta-item"><div class="lbl">Mo. Interest</div><div class="val" style="color:${c.balance>0?'var(--red)':'var(--green)'}">$${mi}</div></div></div><div style="padding:0 16px 14px;display:flex;gap:8px"><button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center" onclick="openCCTransaction('${id}','charge')">+ Add Charge</button><button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center;color:var(--green);border-color:var(--green)" onclick="openCCTransaction('${id}','payment')">− Log Payment</button><button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center;color:var(--blue);border-color:var(--blue)" onclick="openEditCCDirect('${id}')">Edit Balance</button></div><div style="border-top:1px solid var(--border)"><div style="padding:10px 16px 4px;font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted)">Recent Transactions</div>${txHtml}</div>`;
+
+    if (c.isLoan) {
+      // Simplified loan card
+      const txns = (state.ccTransactions||[]).filter(t=>t.cardId===id).slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
+      const txHtml = txns.length ? txns.map(t=>`<div class="txn-row"><div class="txn-date">${formatDate(t.date)}</div><div class="txn-loc">${t.description||(t.type==='payment'?'Payment':'Charge')}</div><div class="txn-amt" style="color:${t.type==='payment'?'var(--green)':'var(--red)'}">${t.type==='payment'?'−':'+'}${fmt(t.amount)}</div></div>`).join('') : '<div style="padding:12px 16px;font-size:13px;color:var(--text-muted)">No transactions logged yet</div>';
+      div.innerHTML = `
+        <div class="cc-header">
+          <div>
+            <div class="cc-name">${c.name}</div>
+            <div class="cc-balance">${fmt(c.balance)}</div>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);background:var(--surface2);border:1px solid var(--border);padding:2px 8px;border-radius:20px">Loan</div>
+        </div>
+        <div style="padding:0 16px 14px;display:flex;gap:8px">
+          <button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center" onclick="openCCTransaction('${id}','charge')">+ Add Balance</button>
+          <button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center;color:var(--green);border-color:var(--green)" onclick="openCCTransaction('${id}','payment')">− Log Payment</button>
+          <button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center;color:var(--blue);border-color:var(--blue)" onclick="openEditCCDirect('${id}')">Edit Balance</button>
+        </div>
+        <div style="border-top:1px solid var(--border)">
+          <div style="padding:10px 16px 4px;font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted)">Recent Transactions</div>
+          ${txHtml}
+        </div>`;
+    } else {
+      // Full credit card
+      const util = c.balance/c.limit, uc = util>.9?'var(--red)':util>.7?'var(--accent)':'var(--green)';
+      const mi = c.balance>0?(c.balance*(c.apr/100)/12).toFixed(2):'0.00';
+      const txns = (state.ccTransactions||[]).filter(t=>t.cardId===id).slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
+      const txHtml = txns.length ? txns.map(t=>`<div class="txn-row"><div class="txn-date">${formatDate(t.date)}</div><div class="txn-loc">${t.description||(t.type==='payment'?'Payment':'Charge')}</div><div class="txn-amt" style="color:${t.type==='payment'?'var(--green)':'var(--red)'}">${t.type==='payment'?'−':'+'}${fmt(t.amount)}</div></div>`).join('') : '<div style="padding:12px 16px;font-size:13px;color:var(--text-muted)">No transactions logged yet</div>';
+      div.innerHTML = `
+        <div class="cc-header">
+          <div><div class="cc-name">${c.name}</div><div class="cc-balance">${fmt(c.balance)}</div></div>
+          <div class="cc-apr">${c.apr.toFixed(2)}% APR</div>
+        </div>
+        <div class="cc-util-bar"><div class="cc-util-fill" style="width:${Math.min(util,1)*100}%;background:${uc}"></div></div>
+        <div class="cc-meta">
+          <div class="cc-meta-item"><div class="lbl">Limit</div><div class="val">${fmt(c.limit)}</div></div>
+          <div class="cc-meta-item"><div class="lbl">Utilization</div><div class="val" style="color:${uc}">${(util*100).toFixed(0)}%</div></div>
+          <div class="cc-meta-item"><div class="lbl">Due Date</div><div class="val">${c.due}</div></div>
+          <div class="cc-meta-item"><div class="lbl">Mo. Interest</div><div class="val" style="color:${c.balance>0?'var(--red)':'var(--green)'}">$${mi}</div></div>
+        </div>
+        <div style="padding:0 16px 14px;display:flex;gap:8px">
+          <button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center" onclick="openCCTransaction('${id}','charge')">+ Add Charge</button>
+          <button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center;color:var(--green);border-color:var(--green)" onclick="openCCTransaction('${id}','payment')">− Log Payment</button>
+          <button class="acct-edit" style="flex:1;font-size:13px;padding:8px;text-align:center;color:var(--blue);border-color:var(--blue)" onclick="openEditCCDirect('${id}')">Edit Balance</button>
+        </div>
+        <div style="border-top:1px solid var(--border)">
+          <div style="padding:10px 16px 4px;font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted)">Recent Transactions</div>
+          ${txHtml}
+        </div>`;
+    }
     container.appendChild(div);
   });
 }
