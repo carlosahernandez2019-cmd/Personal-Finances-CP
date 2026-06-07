@@ -187,7 +187,7 @@
       <div class="stat-box"><div class="lbl">CC Debt</div><div class="val" id="total-cc" style="color:var(--red)">—</div></div>
       <div class="stat-box"><div class="lbl">Loans</div><div class="val" id="total-loan" style="color:var(--text-muted)">—</div></div>
     </div>
-    <div class="section-title">$730 per paycheck</div>
+    <div class="section-title">$784 per paycheck</div>
     <div class="alloc-bar" id="alloc-bar"></div>
     <div class="alloc-legend" id="alloc-legend"></div>
     <div class="section-title">Bank Accounts</div>
@@ -199,7 +199,7 @@
   <!-- ACCOUNTS -->
   <div class="page" id="page-accounts">
     <div class="page-header"><div class="page-title">Accounts</div><div class="page-subtitle">Envelope budgets</div></div>
-    <div class="section-title">$730 per paycheck</div>
+    <div class="section-title">$784 per paycheck</div>
     <div class="alloc-bar" id="alloc-bar-2"></div>
     <div class="alloc-legend" id="alloc-legend-2"></div>
     <div id="account-cards"></div>
@@ -352,7 +352,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const db   = getDatabase(firebaseApp);
 const auth = getAuth(firebaseApp);
-const dataRef = ref(db, 'finances_v2');
+const dataRef = ref(db, 'finances_v3');
 
 window._fbSet        = data => set(dataRef, data);
 window._fbOnValue    = cb   => onValue(dataRef, cb);
@@ -366,10 +366,10 @@ window.dispatchEvent(new Event('firebase-ready'));
 <script>
 const DEFAULT_STATE = {
   accounts: {
-    bmo:       { name: 'BMO', balance: 70.84, color: '#9a7a42', alloc: 100 },
-    co_check:  { name: 'Capital One Checking', balance: 849.59, color: '#3a7eb5', alloc: 121 },
-    co_save:   { name: 'Capital One Savings', balance: 1187.53, color: '#7040b8', alloc: 87 },
-    boa:       { name: 'Bank of America', balance: 1269.42, color: '#c0403a', alloc: 47 },
+    bmo:       { name: 'BMO', balance: 70.84, color: '#9a7a42', alloc: 125 },
+    co_check:  { name: 'Capital One Checking', balance: 849.59, color: '#3a7eb5', alloc: 144 },
+    co_save:   { name: 'Capital One Savings', balance: 1187.53, color: '#7040b8', alloc: 88 },
+    boa:       { name: 'Bank of America', balance: 1269.42, color: '#c0403a', alloc: 52 },
     chase:     { name: 'Chase Savings', balance: 2869.02, color: '#2d8a5e', alloc: 375 },
     amex_save: { name: 'AMEX Savings', balance: 3233.90, color: '#b08030', alloc: 0 },
   },
@@ -383,27 +383,28 @@ const DEFAULT_STATE = {
     edfinancial:   { name: 'EDfinancial Loan', balance: 122919.89, limit: null, apr: null, due: null, color: '#5a8a6a', isLoan: true },
   },
   categories: {
-    bmo:      [{ id:'groceries', name:'Groceries', budget:400, perPaycheck:100, balance:0 }],
+    bmo:      [{ id:'groceries', name:'Groceries', budget:400, perPaycheck:125, balance:0 }],
     co_check: [
-      { id:'phone_bill', name:'Phone Bill', budget:132, perPaycheck:33, balance:0 },
+      { id:'phone_bill', name:'Phone Bill', budget:144, perPaycheck:36, balance:0 },
       { id:'gas_util', name:'Gas (Utility)', budget:100, perPaycheck:25, balance:0 },
       { id:'electricity', name:'Electricity', budget:100, perPaycheck:25, balance:0 },
-      { id:'internet', name:'Internet', budget:50, perPaycheck:13, balance:0 },
-      { id:'car_gas', name:'Car Gas', budget:100, perPaycheck:25, balance:0 },
+      { id:'internet', name:'Internet', budget:80, perPaycheck:20, balance:0 },
+      { id:'car_gas', name:'Car Gas', budget:152, perPaycheck:38, balance:0 },
     ],
     co_save: [
-      { id:'dog_food', name:'Dog Food', budget:50, perPaycheck:5, balance:0 },
+      { id:'dog_food', name:'Dog Food', budget:50, perPaycheck:2.5, balance:0 },
       { id:'dog_bath', name:'Dog Bath', budget:120, perPaycheck:30, balance:0 },
       { id:'sunny_pills', name:'Sunny Pills', budget:36, perPaycheck:4.5, balance:0 },
       { id:'gym', name:'Gym Membership', budget:140, perPaycheck:35, balance:0 },
       { id:'costco_mem', name:'Costco Membership', budget:60, perPaycheck:2, balance:0 },
-      { id:'sunny_vet', name:'Sunny Vet', budget:42, perPaycheck:10.5, balance:0 },
+      { id:'sunny_vet', name:'Sunny Vet', budget:664, perPaycheck:14, balance:0 },
     ],
     boa: [
-      { id:'car_ins', name:'Car Insurance', budget:146, perPaycheck:37, balance:0 },
-      { id:'city_stick', name:'City Sticker', budget:8.5, perPaycheck:2.25, balance:0 },
-      { id:'reg', name:'Registration', budget:16.66, perPaycheck:4.5, balance:0 },
-      { id:'jewelry_ins', name:'Jewelry Insurance', budget:13, perPaycheck:3.25, balance:0 },
+      { id:'car_ins', name:'Car Insurance', budget:870, perPaycheck:37, balance:0 },
+      { id:'city_stick', name:'City Sticker', budget:200, perPaycheck:2.25, balance:0 },
+      { id:'reg', name:'Registration', budget:200, perPaycheck:4.5, balance:0 },
+      { id:'jewelry_ins', name:'Jewelry Insurance', budget:154, perPaycheck:3.25, balance:0 },
+      { id:'oil_change', name:'Oil Change', budget:120, perPaycheck:5, balance:0 },
     ],
     chase:     [{ id:'rent', name:'Rent', budget:1500, perPaycheck:375, balance:0 }],
     amex_save: [],
