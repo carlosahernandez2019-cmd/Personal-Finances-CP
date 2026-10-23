@@ -138,6 +138,24 @@
   .login-btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 15px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 6px; }
   .login-btn:active { opacity: 0.9; }
   .login-error { font-size: 13px; color: var(--red); text-align: center; margin-top: 12px; min-height: 18px; }
+  .month-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 16px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 6px; }
+  .month-nav-btn { width: 40px; height: 36px; border-radius: 8px; border: none; background: var(--surface2); color: var(--text); font-size: 20px; line-height: 1; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .month-nav-btn:active { background: var(--surface3); }
+  .month-nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .month-nav-center { flex: 1; text-align: center; cursor: pointer; }
+  .month-nav-label { font-family: 'DM Serif Display', serif; font-size: 18px; }
+  .month-nav-sub { font-size: 11px; color: var(--text-muted); }
+  .exp-summary { display: flex; justify-content: space-between; align-items: center; margin: 0 16px 12px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+  .exp-summary .lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+  .exp-summary .val { font-family: 'DM Serif Display', serif; font-size: 20px; }
+  .add-card-btn { font-size: 13px; font-weight: 600; color: #fff; background: var(--accent); border: none; border-radius: 10px; padding: 8px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+  .add-card-btn:active { opacity: 0.85; }
+  .swatch-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .swatch { width: 32px; height: 32px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; box-shadow: 0 0 0 1px var(--border); }
+  .swatch.selected { border-color: var(--surface); box-shadow: 0 0 0 2px var(--text); }
+  .form-hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+  .form-row { display: flex; gap: 10px; }
+  .form-row .form-group { flex: 1; min-width: 0; }
   .signout-btn { font-size: 12px; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 4px 0; text-decoration: underline; }
 </style>
 </head>
@@ -207,7 +225,10 @@
 
   <!-- CARDS -->
   <div class="page" id="page-cards">
-    <div class="page-header"><div class="page-title">Credit Cards</div><div class="page-subtitle" id="cards-subtitle">—</div></div>
+    <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div><div class="page-title">Credit Cards</div><div class="page-subtitle" id="cards-subtitle">—</div></div>
+      <button class="add-card-btn" onclick="openAddCard()">+ Add Card</button>
+    </div>
     <div id="cc-cards"></div>
   </div>
 
@@ -224,6 +245,15 @@
       <button class="tab-btn active" onclick="switchExpTab('category')">By Category</button>
       <button class="tab-btn" onclick="switchExpTab('account')">By Account</button>
     </div>
+    <div class="month-nav">
+      <button class="month-nav-btn" id="exp-prev" onclick="changeExpMonth(-1)" aria-label="Previous month">‹</button>
+      <div class="month-nav-center" onclick="resetExpMonth()">
+        <div class="month-nav-label" id="exp-month-label"></div>
+        <div class="month-nav-sub" id="exp-month-sub"></div>
+      </div>
+      <button class="month-nav-btn" id="exp-next" onclick="changeExpMonth(1)" aria-label="Next month">›</button>
+    </div>
+    <div id="expenses-summary"></div>
     <div id="expenses-content"></div>
   </div>
 
@@ -339,6 +369,35 @@
       <div class="form-group"><div class="form-label">Date</div><input class="form-input" type="date" id="amex-txn-date"></div>
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:4px;font-size:13px;color:var(--text-muted)">New balance: <span id="amex-new-bal" style="font-weight:600;color:var(--text)">—</span></div>
       <div class="form-actions"><button class="btn-secondary" onclick="closeModal('modal-amex-txn')">Cancel</button><button class="btn-primary" onclick="saveAmexTxn()">Save</button></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add New Card -->
+  <div class="modal-bg" id="modal-add-card">
+    <div class="modal">
+      <div class="modal-title">Add New Card</div>
+      <div class="tab-row" style="padding:0;margin-bottom:14px">
+        <button class="tab-btn active" id="newcard-type-card" onclick="setNewCardType('card')">Credit Card</button>
+        <button class="tab-btn" id="newcard-type-loan" onclick="setNewCardType('loan')">Loan</button>
+      </div>
+      <div class="form-group"><div class="form-label">Name</div><input class="form-input" type="text" id="newcard-name" placeholder="e.g. Citi Double Cash" maxlength="40"></div>
+      <div class="form-group"><div class="form-label">Current Balance</div><input class="form-input" type="number" id="newcard-balance" placeholder="0.00" min="0" step="0.01" inputmode="decimal"></div>
+      <div id="newcard-cc-fields">
+        <div class="form-row">
+          <div class="form-group"><div class="form-label">Credit Limit</div><input class="form-input" type="number" id="newcard-limit" placeholder="5000" min="1" step="1" inputmode="decimal"></div>
+          <div class="form-group"><div class="form-label">APR (%)</div><input class="form-input" type="number" id="newcard-apr" placeholder="24.99" min="0" max="100" step="0.01" inputmode="decimal"></div>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Payment Due Date</div>
+          <select class="form-select" id="newcard-due"></select>
+          <div class="form-hint">Day of the month your payment is due</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Color</div>
+        <div class="swatch-row" id="newcard-swatches"></div>
+      </div>
+      <div class="form-actions"><button class="btn-secondary" onclick="closeModal('modal-add-card')">Cancel</button><button class="btn-primary" onclick="saveNewCard()">Add Card</button></div>
     </div>
   </div>
 
@@ -784,24 +843,52 @@ function renderPaychecks() {
 }
 
 let expTab = 'category';
+let expView = null; // {year, month} being viewed; null = current month
+function getViewMonth() { return expView || getCurrentMonth(); }
+function isCurrentViewMonth() { const c = getCurrentMonth(), v = getViewMonth(); return v.year === c.year && v.month === c.month; }
+function changeExpMonth(delta) {
+  const v = getViewMonth();
+  const d = new Date(v.year, v.month - 1 + delta, 1);
+  const next = {year: d.getFullYear(), month: d.getMonth() + 1};
+  const c = getCurrentMonth();
+  if (next.year > c.year || (next.year === c.year && next.month > c.month)) return; // no future months
+  expView = (next.year === c.year && next.month === c.month) ? null : next;
+  renderExpenses();
+}
+function resetExpMonth() { if (expView) { expView = null; renderExpenses(); } }
+
 function switchExpTab(tab) {
   expTab = tab;
-  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active',(i===0&&tab==='category')||(i===1&&tab==='account')));
+  document.querySelectorAll('#page-expenses .tab-btn').forEach((b,i) => b.classList.toggle('active',(i===0&&tab==='category')||(i===1&&tab==='account')));
   renderExpenses();
 }
 
 function renderExpenses() {
-  const {year, month} = getCurrentMonth();
-  $('expenses-subtitle').textContent = new Date(year,month-1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const {year, month} = getViewMonth();
+  const isCurrent = isCurrentViewMonth();
+  const monthLabel = new Date(year,month-1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  $('expenses-subtitle').textContent = isCurrent ? 'This month' : 'Past month';
+  $('exp-month-label').textContent = monthLabel;
+  $('exp-month-sub').textContent = isCurrent ? 'Current month' : 'Tap to jump to current month';
+  $('exp-next').disabled = isCurrent;
   const ym = `${year}-${String(month).padStart(2,'0')}`, container = $('expenses-content'); container.innerHTML = '';
+
+  const monthExpenses = (state.expenses||[]).filter(e => e.date.slice(0,7) === ym);
+  const monthTotal = monthExpenses.reduce((s,e) => s + e.amount, 0);
+  $('expenses-summary').innerHTML = `<div class="exp-summary"><div><div class="lbl">Total spent</div><div class="val">${fmt(monthTotal)}</div></div><div style="font-size:12px;color:var(--text-muted)">${monthExpenses.length} transaction${monthExpenses.length===1?'':'s'}</div></div>`;
+
+  const emptyMsg = isCurrent ? 'No expenses logged yet this month' : `No expenses logged in ${monthLabel}`;
 
   if (expTab === 'category') {
     orderedAccounts().forEach(([accId, acc]) => {
       (state.categories[accId]||[]).forEach(cat => {
+        const txns = monthExpenses.filter(e=>e.accountId===accId&&e.categoryId===cat.id).sort((a,b)=>b.date.localeCompare(a.date));
+        // Past months: only show categories that had spending
+        if (!isCurrent && !txns.length) return;
+        const spent = txns.reduce((s,t)=>s+t.amount,0);
         const bal = cat.balance || 0;
         const balColor = bal <= 0 ? 'var(--red)' : bal < cat.budget * 0.25 ? 'var(--accent)' : 'var(--green)';
         const pct = Math.min(bal / cat.budget, 1);
-        const txns = (state.expenses||[]).filter(e=>e.accountId===accId&&e.categoryId===cat.id&&e.date.slice(0,7)===ym);
         const txHtml = txns.length
           ? txns.map(t=>`
               <div class="txn-row">
@@ -812,37 +899,44 @@ function renderExpenses() {
               </div>`).join('')
           : '<div style="padding:12px 16px;font-size:13px;color:var(--text-muted)">No transactions this month</div>';
 
-        const card = document.createElement('div'); card.className = 'exp-cat-card';
-        card.innerHTML = `
-          <div class="exp-cat-header" onclick="this.parentElement.classList.toggle('open')">
-            <div class="acct-dot" style="background:${acc.color}"></div>
-            <div style="flex:1">
-              <div class="exp-cat-name">${cat.name}</div>
-              <div style="font-size:12px;color:var(--text-muted)">${acc.name} · +$${cat.perPaycheck}/paycheck</div>
-            </div>
-            <div style="text-align:right;margin-right:8px">
-              <div style="font-size:16px;font-weight:700;font-family:'DM Serif Display',serif;color:${balColor}">${fmt(bal)}</div>
-              <div style="font-size:11px;color:var(--text-muted)">of ${fmt(cat.budget)}</div>
-            </div>
-            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
-          <div class="exp-cat-body">
+        const headerRight = isCurrent
+          ? `<div style="font-size:16px;font-weight:700;font-family:'DM Serif Display',serif;color:${balColor}">${fmt(bal)}</div>
+             <div style="font-size:11px;color:var(--text-muted)">of ${fmt(cat.budget)}</div>`
+          : `<div style="font-size:16px;font-weight:700;font-family:'DM Serif Display',serif;color:var(--text)">${fmt(spent)}</div>
+             <div style="font-size:11px;color:var(--text-muted)">spent</div>`;
+        const headerSub = isCurrent ? `${acc.name} · +$${cat.perPaycheck}/paycheck` : acc.name;
+        const envelopeBlock = isCurrent ? `
             <div class="cat-row" style="border-bottom:1px solid var(--border)">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
                 <div style="font-size:12px;color:var(--text-muted)">Envelope balance</div>
                 <div class="acct-edit" onclick="openEnvelopeEdit('${accId}','${cat.id}')">Edit balance</div>
               </div>
               <div class="progress-track"><div class="progress-fill" style="width:${pct*100}%;background:${balColor}"></div></div>
+            </div>` : '';
+
+        const card = document.createElement('div'); card.className = 'exp-cat-card';
+        card.innerHTML = `
+          <div class="exp-cat-header" onclick="this.parentElement.classList.toggle('open')">
+            <div class="acct-dot" style="background:${acc.color}"></div>
+            <div style="flex:1">
+              <div class="exp-cat-name">${cat.name}</div>
+              <div style="font-size:12px;color:var(--text-muted)">${headerSub}</div>
             </div>
-            <div style="padding:8px 16px 4px;font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted)">This Month's Transactions</div>
+            <div style="text-align:right;margin-right:8px">${headerRight}</div>
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="exp-cat-body">
+            ${envelopeBlock}
+            <div style="padding:8px 16px 4px;font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted)">${isCurrent ? "This Month's Transactions" : 'Transactions'}</div>
             ${txHtml}
           </div>`;
         container.appendChild(card);
       });
     });
+    if (!isCurrent && !container.children.length) container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px">${emptyMsg}</div>`;
   } else {
     orderedAccounts().forEach(([accId, acc]) => {
-      const txns = (state.expenses||[]).filter(e=>e.accountId===accId&&e.date.slice(0,7)===ym);
+      const txns = monthExpenses.filter(e=>e.accountId===accId).sort((a,b)=>b.date.localeCompare(a.date));
       if (!txns.length) return;
       const total = txns.reduce((s,t)=>s+t.amount,0);
       const card = document.createElement('div'); card.className = 'exp-cat-card open';
@@ -854,16 +948,18 @@ function renderExpenses() {
           <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <div class="exp-cat-body">
-          ${txns.map(t=>`
+          ${txns.map(t=>{
+            const cat = getCatRef(accId, t.categoryId);
+            return `
             <div class="txn-row">
               <div class="txn-date">${formatDate(t.date)}</div>
-              <div class="txn-loc">${t.description||t.categoryId}</div>
+              <div class="txn-loc">${t.description||(cat?cat.name:t.categoryId)}</div>
               <div class="txn-amt">${fmt(t.amount)}</div>
-            </div>`).join('')}
+            </div>`;}).join('')}
         </div>`;
       container.appendChild(card);
     });
-    if (!container.children.length) container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px">No expenses logged yet this month</div>';
+    if (!container.children.length) container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px">${emptyMsg}</div>`;
   }
 }
 
@@ -901,10 +997,16 @@ function saveCCTransaction() {
   saveState(); closeModal('modal-cc-balance'); showToast(ccTxnType==='payment'?`Payment of ${fmt(amount)} logged ✓`:`Charge of ${fmt(amount)} added ✓`); renderOverview(); renderCards();
 }
 
+function defaultExpenseDate() {
+  if (isCurrentViewMonth()) return today();
+  const {year, month} = getViewMonth();
+  const last = new Date(year, month, 0).getDate();
+  return `${year}-${String(month).padStart(2,'0')}-${String(last).padStart(2,'0')}`;
+}
 function openAddExpense() {
   const sel=$('exp-account'); sel.innerHTML='<option value="">Select account…</option>';
   Object.entries(state.accounts).forEach(([id,a])=>{ if((state.categories[id]||[]).length){const o=document.createElement('option');o.value=id;o.textContent=a.name;sel.appendChild(o);} });
-  $('exp-date').value=today(); $('exp-amount').value=''; $('exp-desc').value=''; $('exp-category').innerHTML='<option value="">Select account first…</option>'; $('modal-expense').classList.add('open');
+  $('exp-date').value=defaultExpenseDate(); $('exp-amount').value=''; $('exp-desc').value=''; $('exp-category').innerHTML='<option value="">Select account first…</option>'; $('modal-expense').classList.add('open');
 }
 function updateCategoryDropdown() { const aid=$('exp-account').value,sel=$('exp-category'); sel.innerHTML=''; if(!aid){sel.innerHTML='<option value="">Select account first…</option>';return;} (state.categories[aid]||[]).forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o);}); }
 function saveExpense() {
@@ -1076,6 +1178,75 @@ function deleteCCTxn(id, cardId, amount, type) {
   renderCards();
   renderOverview();
   showToast('Transaction removed ✓');
+}
+
+// ── ADD NEW CARD ────────────────────────────────────────────────
+
+const CARD_COLORS = ['#3a7eb5','#7040b8','#c0403a','#2d8a5e','#e07830','#9a7a42','#555555','#d0508a','#1f9aa8','#5a8a6a'];
+let newCardType = 'card', newCardColor = CARD_COLORS[0];
+
+const ordinal = n => { const v = n % 100; if (v >= 11 && v <= 13) return n + 'th'; return n + (['th','st','nd','rd'][n % 10] || 'th'); };
+
+function renderSwatches() {
+  $('newcard-swatches').innerHTML = CARD_COLORS.map(c =>
+    `<div class="swatch${c === newCardColor ? ' selected' : ''}" style="background:${c}" onclick="pickCardColor('${c}')"></div>`).join('');
+}
+function pickCardColor(c) { newCardColor = c; renderSwatches(); }
+
+function setNewCardType(type) {
+  newCardType = type;
+  $('newcard-type-card').classList.toggle('active', type === 'card');
+  $('newcard-type-loan').classList.toggle('active', type === 'loan');
+  $('newcard-cc-fields').style.display = type === 'card' ? 'block' : 'none';
+}
+
+function openAddCard() {
+  $('newcard-name').value = '';
+  $('newcard-balance').value = '';
+  $('newcard-limit').value = '';
+  $('newcard-apr').value = '';
+  const due = $('newcard-due');
+  due.innerHTML = '<option value="">Select day…</option>' + Array.from({length:31}, (_,i) => `<option value="${ordinal(i+1)}">${ordinal(i+1)}</option>`).join('');
+  // Pick the first color not already used by an existing card
+  const used = Object.values(state.creditCards).map(c => c.color);
+  newCardColor = CARD_COLORS.find(c => !used.includes(c)) || CARD_COLORS[0];
+  renderSwatches();
+  setNewCardType('card');
+  $('modal-add-card').classList.add('open');
+}
+
+function saveNewCard() {
+  const name = $('newcard-name').value.trim();
+  const balance = parseFloat($('newcard-balance').value);
+  if (!name) { showToast('Enter a card name'); return; }
+  if (isNaN(balance) || balance < 0) { showToast('Enter the current balance'); return; }
+  const dupe = Object.values(state.creditCards).some(c => c.name.toLowerCase() === name.toLowerCase());
+  if (dupe) { showToast('A card with that name already exists'); return; }
+
+  let card;
+  if (newCardType === 'loan') {
+    card = { name, balance: Math.round(balance*100)/100, limit: null, apr: null, due: null, color: newCardColor, isLoan: true };
+  } else {
+    const limit = parseFloat($('newcard-limit').value);
+    const apr = parseFloat($('newcard-apr').value);
+    const due = $('newcard-due').value;
+    if (isNaN(limit) || limit <= 0) { showToast('Enter the credit limit'); return; }
+    if (isNaN(apr) || apr < 0) { showToast('Enter the APR'); return; }
+    if (!due) { showToast('Select the payment due date'); return; }
+    card = { name, balance: Math.round(balance*100)/100, limit, apr, due, color: newCardColor };
+  }
+
+  // Unique id from name
+  let base = name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'card';
+  let id = base, n = 2;
+  while (state.creditCards[id]) id = base + '_' + n++;
+
+  state.creditCards[id] = card;
+  saveState();
+  closeModal('modal-add-card');
+  showToast(`${name} added ✓`);
+  renderCards();
+  renderOverview();
 }
 
 function closeModal(id) { $(id).classList.remove('open'); }
